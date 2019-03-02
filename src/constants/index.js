@@ -3,10 +3,13 @@ export const COLORS = {
   Descriptive: '#7030A0',
   Empirical: '#9933FF',
   'Historical, descriptive': '#660066',
+  Historical: '#660066',
   'Classificatory definition': '#CC3399',
+  Classificatory: '#CC3399',
   Numerical: '#CC99FF',
 
   Characterizing: '#01B050',
+  Philosophical: '#66FFCC',
   'Philosophical, epistemological': '#66FFCC',
   Methodological: '#00CC99',
   Classical: '#006600',
@@ -19,12 +22,16 @@ export const COLORS = {
   Analogical: '#FF0166',
 
   Decorative: '#FFC001',
+  Metaphorical: '#CC9900',
   'Metaphorical, visual': '#CC9900',
   'Agency to nature': '#FFFF02',
+  'Metaphor-AgencyNature': '#FFFF02',
 
   Persuasive: '#0070C0',
   'Future, utility': '#66FFFF',
-  'Writing aim, direction': '#0066FF'
+  'Future-Utility': '#66FFFF',
+  'Writing aim, direction': '#0066FF',
+  'Writing direction': '#0066FF'
 };
 
 export const categoryRelationships = [

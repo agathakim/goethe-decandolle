@@ -1,0 +1,85 @@
+[{
+"SuperCategory":"Descriptive",
+"Individual Category":"Empirical",
+"Goethe":"“The [Ranunculus aquaticus] leaves produced underwater consist of threadlike ribs, while those developed above water are fully anastomosed and form a unified surface.” (19)",
+"De Candolle":"“Likewise the birches, whose bark presents a great number of superimposed epidermis, resist coldness astonishingly” (DC2,365)"
+},{
+  "SuperCategory":"Descriptive",
+  "Individual Category":"Historical",
+  "Goethe":"“Without any clear idea of the purpose of these plant organs, he [Linnaeus] followed his intuition and gave the same name for the seemingly different organs.” (41)",
+  "De Candolle":"“If we examine the development of crystallography, we see that Romé-de-l’Isle, considering crystals as single bodies, explained their anomalies by truncations, whereas Haüy, using the theory of primitive molecules, succeeded at explaining the most complicated forms, by referring them to the diverse ways in which these molecules bond together.” (DC3, 237)"
+},{
+  "SuperCategory":"Descriptive",
+  "Individual Category":"Classificatory",
+  "Goethe":"“These first organs are known as cotyledons. They have also been called seminal leaves, kernels, seed lobes, etc. to express the various forms in which they appear.” (9)",
+  "De Candolle":"“The term station indicates the special nature of the locality in which each species is accustomed to grow, and the term habitation is a general indication of the country where it grows naturally.” (DC2, 383)"
+},{
+  "SuperCategory":"Descriptive",
+  "Individual Category":"Numerical",
+  "Goethe":"N/A",
+  "De Candolle":"“one finds that, among 1485 vascular plants which grow in the British Isles, there are only 43 or 1/34 which have been found also in France” (DC2, 404)"
+},{
+  "SuperCategory":"Characterizing",
+  "Individual Category":"Philosophical",
+  "Goethe":"“Biological science, which has developed significantly in recent years, has relied heavily on this consistency [of natural forms] for its growth, stability, and reputation.” (31)",
+  "De Candolle":"“It is beyond my subject to demonstrate here, although I believe it is easy to do so, that the difference which is found in the progress of zoology and that of botany is not arbitrary, but has to do with the essential nature of animals and vegetable” (DC1, 15)"
+},{
+  "SuperCategory":"Characterizing",
+  "Individual Category":"Methodological",
+  "Goethe":"“To not lose the thread which guides us, we have only considered the annual plants, limited our discussion to the metamorphoses of the leaves which accompany the nodes, and derived all the forms from them.” (69)",
+  "De Candolle":"“The monstrosities are … the experiences that nature has created for the profit of observers: in them we see what organs are when they are not united together; we recognize what they are truly like when an accidental cause does not prevent them from developing.” (DC3, 240)"
+},{
+  "SuperCategory":"Characterizing",
+  "Individual Category":"Classical",
+  "Goethe":"“After having endeavored to make it clear that the plant organs that are developed in sequence, with great variations of their external forms, are intrinsically the same …” (53; tagged with both Romantic and Classical categories); “This action of nature is also accompanied by another, that is, the union of diverse organs around a center in fixed numbers and proportions” (99)",
+  "De Candolle":"“It often happens that such plant which is thought to be an exception to a family or genera in which one has placed it, really belongs to a different family, when its organization is better known” (DC1, 25); “Considered in its purely physical action, the temperature dilates or condenses plant parts, like those of all bodies.” (DC2, 363); “Thus, each family of plants, like each class of crystals, can be represented by a regular state … it is what I call its type: unions, abortions, degenerations, or multiplications modify this primitive type” (DC3, 241; tagged with both Romantic and Classical categories)"
+},{
+  "SuperCategory":"Characterizing",
+  "Individual Category":"Romantic",
+  "Goethe":"“There is a hidden relationship among various external parts of the plant which develop one after the other and, as it were, one out of the other … The process by which one and the sane organ appears in a variety of forms has been called the metamorphosis of plants.” (5)",
+  "De Candolle":"“For the plants which have the same type are not more analogous than the crystals which have the similar primitive molecules. If botany is much behind mineralogy in this regard, it results, on the one hand, from all these facts being submitted to a particular force (vital force,) whose laws are much more obscure and difficult to study than those of analogy and attraction.” (DC3, 241)"
+},{
+  "SuperCategory":"Logical",
+  "Individual Category":"Rational-Speculative",
+  "Goethe":"“Perhaps the nectaries are merely the preparatory organs, perhaps their honey is drawn by the stamens, to be further developed and differentiated.” (51)",
+  "De Candolle":"“This phenomenon can be due to either the multitude of islands which are dispersed in this sea, or to the fact that it has been traveled by navigators longer than any other, or maybe that it originated from some eruption of the ocean after the origin of the vegetation.” (DC2, 405)"
+},{
+  "SuperCategory":"Logical",
+  "Individual Category":"Inductive",
+  "Goethe":"“Thus, a stamen emerges when the organs, which earlier expanded to form petals, reappear in a highly contracted and much more refined state.” (39)",
+  "De Candolle":"“Even if it is impossible to find a flower whose petals were geometrically the same, or a leaf whose two sides were mathematically similar, there is no denying that one is struck by the kind of regularity of these organs.” (DC3, 238; tagged with both Romantic and Classical categories)"
+},{
+  "SuperCategory":"Logical",
+  "Individual Category":"Deductive",
+  "Goethe":"“Thus, if one cannot imagine a leaf without a node, and a node without an eye, we must infer that the point where the cotyledons are attached is the first true node of the plant.” (11)",
+  "De Candolle":"“From which results that, under each given latitude, the species which need proportionally more light than heat must occupy the summit of the mountains, and those which need more heat than light must remain on the plains.” (DC2, 370)"
+},{
+  "SuperCategory":"Logical",
+  "Individual Category":"Analogical",
+  "Goethe":"“Thus the lateral branches stemming from the nodes of the plant can be considered as small plants attached to the parent in the same way that the parent is attached to the earth.” (73)",
+  "De Candolle":"“We already saw that, in the animal kingdom, the classes established by the organs of nutrition corresponded to those by the organs of generation: like this, we see that, in plants, the division by reproductive characteristics are in agreement with the division by disposition of vessels.” (DC1, 16)"
+},{
+  "SuperCategory":"Decorative",
+  "Individual Category":"Metaphorical",
+  "Goethe":"“It [Regular metamorphosis] is observed step by step from the cotyledon to the last formation of the fruit, and, like a spiritual ladder, reaches the pinnacle of nature by changing one form into another, namely the propagation by the two sexes.” (5)",
+  "De Candolle":"“Species are large villages; genera are provinces; families are empires; classes are analogous to sections of the world, and the plants that remain isolated are represented by the islands distant from any continent.” (DC1, 24)"
+},{
+  "SuperCategory":"Decorative",
+  "Individual Category":"Metaphor-AgencyNature",
+  "Goethe":"“Nature hastened towards her great goal, here she takes one or more steps backwards. There, nature formed the flowers with irresistible force and tremendous effort, and prepared them for works of love” (5-7)",
+  "De Candolle":"“Either the intermediary beings are still unknown, or else, nature has indeed placed in the order of beings the empty spaces, here and there, just as she placed on the globe the inhabitable marshes and deserts.” (DC1, 24-25)"
+},{
+  "SuperCategory":"Persuasive",
+  "Individual Category":"Future-Utility",
+  "Goethe":"“As exact observation and comparison of different forms … are of a great importance, for this reason alone, a collection of properly arranged illustrations with the botanical terms for the different parts of the plant would be both pleasant and useful.” (81)",
+  "De Candolle":"“Thus, in admitting this theory [of analogy], one will be able to put in more order and more method in the description and demonstration of medicines” (DC1, 12)"
+},{
+  "SuperCategory":"Persuasive",
+  "Individual Category":"Writing direction",
+  "Goethe":"“The aim of these observations is not to disrupt the classifications made by earlier observers and taxonomists; we only wish to clarify the variations in plant form.” (47)",
+  "De Candolle":"“I will proceed to expound on the summary of this entire work in an aphoristic form, which could give some idea of these principles of symmetry” (DC3, 244)"
+},{
+  "SuperCategory":"NA",
+  "Individual Category":"Blank",
+  "Goethe":"N/A",
+  "De Candolle":"“Here is the result of this comparison” (DC2, 420)"}]
