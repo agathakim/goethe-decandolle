@@ -32,7 +32,8 @@ const DEFAULT_STATE = Immutable.fromJS({
   waffleBookData: prepWaffleData(preparedData),
   // NOT DATA
   hoveredComment: null,
-  lockedWaffle: false
+  lockedWaffle: false,
+  showWafflebook: false
 });
 
 function setHoveredComment(state, payload) {
@@ -60,9 +61,14 @@ function toggleLock(state) {
   return state.set('lockedWaffle', !state.get('lockedWaffle'));
 }
 
+function toggleWafflebookAndTimeseries(state) {
+  return state.set('showWafflebook', !state.get('showWafflebook'));
+}
+
 const actionFuncMap = {
   'set-hovered-sentence': setHoveredComment,
-  'toggle-lock': toggleLock
+  'toggle-lock': toggleLock,
+  'toggle-waffle-plot-and-timeseries': toggleWafflebookAndTimeseries
 };
 const NULL_ACTION = (state, payload) => state;
 

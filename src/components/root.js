@@ -9,6 +9,10 @@ import WaffleBook from './waffle-book';
 
 class RootComponent extends React.Component {
   render() {
+    const {
+      showWafflebook,
+      toggleWafflebookAndTimeseries
+    } = this.props;
     return (
       <div>
       <h1>TITLE TIEL TIEL</h1>
@@ -18,7 +22,7 @@ class RootComponent extends React.Component {
       {
         
         // <div><Sankey data={this.props.sankeyData.toJS()}/></div>
-        // <TimeSeries data={this.props.timeSeriesData.toJS()}/>
+        // 
       }
         <div className="flex-down">
             <div className="flex">
@@ -27,17 +31,27 @@ class RootComponent extends React.Component {
                   hoveredComment={this.props.hoveredComment}
                   data={this.props.sunburstData.toJS()}/>
                 <div className="sentence-box">
-                  {!!this.props.hoveredComment && <div>
-                    {this.props.hoveredComment.sentence}
-                  </div>}
+                  <div>
+                    {this.props.hoveredComment ? 
+                      this.props.hoveredComment.sentence :
+                      'hover over grid to the right to select a sentence'}
+                  </div>
                 </div>
               </div>
-            <WaffleBook
-              toggleLock={this.props.toggleLock}
-              lockedWaffle={this.props.lockedWaffle}
-              hoveredComment={this.props.hoveredComment}
-              setHoveredComment={this.props.setHoveredComment}
-              data={this.props.waffleBookData.toJS()}/>
+            <div className="flex-down">
+                <button onClick={toggleWafflebookAndTimeseries}>
+                  {`Show ${showWafflebook ? 'TimeSeries' : 'Grid'}`}
+                </button>
+                {showWafflebook ? 
+                  (<WaffleBook
+                    toggleLock={this.props.toggleLock}
+                    lockedWaffle={this.props.lockedWaffle}
+                    hoveredComment={this.props.hoveredComment}
+                    setHoveredComment={this.props.setHoveredComment}
+                    data={this.props.waffleBookData.toJS()}/>) :
+                  (<TimeSeries data={this.props.timeSeriesData.toJS()}/>)
+                }
+            </div>
           </div>
 
         </div>
@@ -54,7 +68,8 @@ function mapStateToProps({base}) {
     waffleBookData: base.get('waffleBookData'),
     
     hoveredComment: base.get('hoveredComment'),
-    lockedWaffle: base.get('lockedWaffle')
+    lockedWaffle: base.get('lockedWaffle'),
+    showWafflebook: base.get('showWafflebook')
   };
 }
 

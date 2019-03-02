@@ -1,6 +1,5 @@
 import React from 'react';
 import {XYPlot, PolygonSeries} from 'react-vis';
-// import PolygonSeries from './polygon-series';
 import {TARGET_WIDTH} from '../constants';
 const WIDTH = 600;
 
@@ -11,7 +10,7 @@ class StaticWaffle extends React.Component {
     return (
       <div className="static-waffle"
         style={{
-          opacity: lockedWaffle ? 0.1 : 1
+          opacity: lockedWaffle ? 0.3 : 1
         }}>
         <XYPlot 
           height={HEIGHT} 
@@ -167,7 +166,7 @@ export default class WaffleBook extends React.Component {
               toggleLock={toggleLock}
               data={data} 
               hoveredComment={hoveredComment} />}
-        <div> click to lock </div>
+        <div> {`click to ${lockedWaffle ? 'un' : ''}lock`}</div>
       </div>
     );
   }
