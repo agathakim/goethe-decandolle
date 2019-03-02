@@ -1,0 +1,19 @@
+a {
+  cursor: pointer;
+}
+
+html,
+body,
+#vue-hack {
+  font-family: Verdana, Geneva, sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#vue-hack {
+  padding: 10px 90px;
+  height: calc(100% - 20px);
+  width: calc(100% - 180px);
+}
