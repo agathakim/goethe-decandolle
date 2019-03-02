@@ -1,21 +1,21 @@
 import React from 'react';
-import {XYPlot, PolygonSeries} from 'react-vis';
+import {XYPlot} from 'react-vis';
+import PolygonSeries from './polygon-series';
+import {TARGET_WIDTH} from '../constants';
+const WIDTH = 750;
 
-export default class WaffleBook extends React.Component {
+const HEIGHT = 500;
+class StaticWaffle extends React.Component {
   render() {
-    const exampleGroups = [
-      [
-        {colors: ['#01B050', '#66FFCC', '#00CC99', '#006600', '#00FF02'], offset: 0}
-      ],
-      [
-        {colors: ['#FF3301', '#66FFCC'], offset: 0},
-        {colors: ['#FFC001', '#CC3399'], offset: 2}
-      ]
-    ];
-    const {data} = this.props;
+    const {data, setHoveredComment, toggleLock} = this.props;
     return (
-      <div>
-        <XYPlot height={1000} width={2500}>
+      <div className="static-waffle">
+        <XYPlot 
+          height={HEIGHT} 
+          width={WIDTH} 
+          onMouseOut={d => setHoveredComment(null)}
+          xDomain={[0, TARGET_WIDTH + 1]}
+          yDomain={[data.length, 0]}>
           {
             // THE COLOR BLOCKS
           }
@@ -23,12 +23,13 @@ export default class WaffleBook extends React.Component {
             return acc.concat(row.map(({offset, colors}) => {
               return [...new Array(colors.length)].map((_, idx) => {
                 return (<PolygonSeries 
+                  onSeriesClick={d => {
+                    console.log(d)
+                    this.props.toggleLock()
+                  }}
+                  onSeriesMouseOver={d => setHoveredComment(sentenceIdx)}
                   key={`${idx}-${jdx}`}
                   color={colors[idx]}
-                  style={{
-                    fillOpacity: 0.75,
-                    strokeOpacity: 0.75
-                  }}
                   data={[
                     {x: offset + idx, y: jdx},
                     {x: offset + idx + 1, y: jdx},
@@ -43,14 +44,19 @@ export default class WaffleBook extends React.Component {
             // THE OUTLINES
           }
           {data.reduce((acc, row, jdx) => {
-            return acc.concat(row.map(({offset, colors}, idx) => {
+            return acc.concat(row.map(({offset, colors, sentenceIdx}, idx) => {
               return (<PolygonSeries 
+                onSeriesClick={d => {
+                  console.log(d)
+                  this.props.toggleLock()
+                }}
+                onSeriesMouseOver={d => setHoveredComment(sentenceIdx)}
                 key={`groups-${idx}-${jdx}`}
                 style={{
                   fill: 'red',
                   fillOpacity: 0,
-                  stroke: 'black',
-                  strokeWidth: '10px'
+                  stroke: '#fff',
+                  strokeWidth: '2.5px'
                 }}
                 data={[
                   {x: offset, y: jdx},
@@ -62,6 +68,73 @@ export default class WaffleBook extends React.Component {
             }))
           }, [])}
         </XYPlot>
+      </div>
+    )
+  }
+}
+
+
+class DynamicWaffle extends React.Component {
+  render() {
+    const {hoveredComment, data} = this.props;
+    let hoveredSquare = null;
+    for (let jdx = 0; jdx < data.length; jdx++) {
+      for (let idx = 0; idx < data[jdx].length; idx++) {
+        const {sentenceIdx, offset, colors} = data[jdx][idx];
+        if (sentenceIdx === hoveredComment.idx) {
+          hoveredSquare = [
+            {x: offset, y: jdx},
+            {x: offset + colors.length, y: jdx},
+            {x: offset + colors.length, y: jdx + 1},
+            {x: offset, y: jdx + 1},
+          ];
+        }
+      }
+    }
+
+    return (
+      <div className="dynamic-waffle">
+        <XYPlot 
+          height={HEIGHT} 
+          width={WIDTH}
+          xDomain={[0, TARGET_WIDTH + 1]}
+          yDomain={[data.length, 0]}>
+          <PolygonSeries 
+            style={{
+              fill: 'red',
+              fillOpacity: 0,
+              stroke: 'black',
+              strokeWidth: '2.5px'
+            }}
+            data={hoveredSquare}
+            />
+        </XYPlot>
+      </div>
+    )
+  }
+}
+
+
+export default class WaffleBook extends React.Component {
+  render() {
+    const {
+      data,
+      lockedWaffle,
+      setHoveredComment, 
+      hoveredComment, 
+      toggleLock
+    } = this.props;
+    console.log(lockedWaffle)
+    return (
+      <div className="waffle-book">
+        <StaticWaffle 
+          data={data} 
+          toggleLock={toggleLock}
+          setHoveredComment={setHoveredComment} />
+        {hoveredComment && 
+            <DynamicWaffle 
+              data={data} 
+              hoveredComment={hoveredComment} />}
       </div>
     );
   }

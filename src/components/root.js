@@ -9,7 +9,6 @@ import WaffleBook from './waffle-book';
 
 class RootComponent extends React.Component {
   render() {
-    // console.log(this.props.timeSeriesData.toJS())
     return (
       <div>
       <h1>TITLE TIEL TIEL</h1>
@@ -18,11 +17,30 @@ class RootComponent extends React.Component {
       <div>DESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTION</div>
       {
         
-        // <div><Sankey data={this.props.data.toJS()}/></div>
+        // <div><Sankey data={this.props.sankeyData.toJS()}/></div>
         // <TimeSeries data={this.props.timeSeriesData.toJS()}/>
       }
-      <Sunburst data={this.props.sunburstData.toJS()}/>
-      <WaffleBook data={this.props.waffleBookData.toJS()}/>
+        <div className="flex-down">
+            <div className="flex">
+              <div className="flex-down">
+                <Sunburst 
+                  hoveredComment={this.props.hoveredComment}
+                  data={this.props.sunburstData.toJS()}/>
+                <div className="sentence-box">
+                  {!!this.props.hoveredComment && <div>
+                    {this.props.hoveredComment.sentence}
+                  </div>}
+                </div>
+              </div>
+            <WaffleBook
+              toggleLock={this.props.toggleLock}
+              lockedWaffle={this.props.lockedWaffle}
+              hoveredComment={this.props.hoveredComment}
+              setHoveredComment={this.props.setHoveredComment}
+              data={this.props.waffleBookData.toJS()}/>
+          </div>
+
+        </div>
       </div>
     )
   }
@@ -30,10 +48,13 @@ class RootComponent extends React.Component {
 
 function mapStateToProps({base}) {
   return {
-    data: base.get('data'),
+    sankeyData: base.get('sankeyData'),
     timeSeriesData: base.get('timeSeriesData'),
     sunburstData: base.get('sunburstData'),
-    waffleBookData: base.get('waffleBookData')
+    waffleBookData: base.get('waffleBookData'),
+    
+    hoveredComment: base.get('hoveredComment'),
+    lockedWaffle: base.get('lockedWaffle')
   };
 }
 

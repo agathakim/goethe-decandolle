@@ -46,3 +46,5 @@ export const categoryRelationships = [
   {cat: 'Writing direction',	superCat: 'Persuasive'},
   {cat: 'Blank',	superCat: 'NA'}
 ];
+
+export const TARGET_WIDTH = 10;

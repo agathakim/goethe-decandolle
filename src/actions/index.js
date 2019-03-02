@@ -1,6 +1,7 @@
 const buildEasyAction = type => payload => dispatch => dispatch({type, payload});
 // EXAMPLE
-// export const setHoveredComment = buildEasyAction('set-hovered-comment');
+export const setHoveredComment = buildEasyAction('set-hovered-sentence');
+export const toggleLock = buildEasyAction('toggle-lock');
 
 // EXAMPLE
 // const itemUrl = id => `https://hacker-news.firebaseio.com/v0/item/${id}.json`;

@@ -17,3 +17,34 @@ body,
   height: calc(100% - 20px);
   width: calc(100% - 180px);
 }
+
+.flex {
+  display: flex;
+}
+.flex-down {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.waffle-book .rv-xy-plot__series--polygon {
+  cursor: pointer;
+}
+.static-waffle {
+  position: absolute;
+}
+.dynamic-waffle {
+  pointer-events: none;
+}
+
+.rv-sunburst {
+  font-size: 8px;
+}
+
+.sentence-box {
+  width: 300px;
+}
