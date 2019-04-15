@@ -8,6 +8,7 @@ import Sankey from './sankey';
 import Sunburst from './sunburst';
 import TimeSeries from './time-series';
 import WaffleBook from './waffle-book';
+import Venn from './venn-diagram';
 
 import ExampleLabelTable from '../constants/example-label-table.json';
 
@@ -21,12 +22,11 @@ class RootComponent extends React.Component {
       <div>
       <h1>{'Comparison & visualization of the forms of scientific texts in the nineteenth century'}</h1>
       <h3>{'Case 1: Goethe and De Candolle'}</h3>
-      <h5>Agatha Kim (assisted by Andrew McNutt)</h5>
+      <h5>Agatha Kim</h5>
       <div>DESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTION</div>
       {
         
-        // <div><Sankey data={this.props.sankeyData.toJS()}/></div>
-        // 
+        // <div><Venn data={this.props.vennData.toJS()}/></div>
       }
       <div>
         <h5>GOETHE - TEXT NAME</h5>
@@ -91,6 +91,7 @@ function mapStateToProps({base}) {
     timeSeriesData: base.get('timeSeriesData'),
     sunburstData: base.get('sunburstData'),
     waffleBookData: base.get('waffleBookData'),
+    vennData: base.get('vennData'),
     
     hoveredComment: base.get('hoveredComment'),
     lockedWaffle: base.get('lockedWaffle'),

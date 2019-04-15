@@ -6,7 +6,8 @@ import {
   generateCombinationCounts,
   prepTimeSeriesData,
   prepSunburst,
-  prepWaffleData
+  prepWaffleData,
+  generateCombinationCountsForVenn
 } from './data-analysis-scripts';
 import GoetheNumberedSentences from '../constants/goethe-numbered';
 
@@ -30,10 +31,11 @@ const DEFAULT_STATE = Immutable.fromJS({
   timeSeriesData: prepTimeSeriesData(preparedData),
   sunburstData: prepSunburst(preparedData),
   waffleBookData: prepWaffleData(preparedData),
+  vennData: generateCombinationCountsForVenn(preparedData.slice(0,2)),
   // NOT DATA
   hoveredComment: null,
   lockedWaffle: false,
-  showWafflebook: false
+  showWafflebook: true
 });
 
 function setHoveredComment(state, payload) {

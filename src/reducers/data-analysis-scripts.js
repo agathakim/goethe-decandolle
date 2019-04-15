@@ -67,6 +67,59 @@ export function generateCombinationCounts(dataset) {
   return {nodes, links};
 }
 
+export function generateCombinationCountsForVenn(dataset) {
+  const allKeys = Object.keys(dataset[0]).map(row => {
+    if (!row.length) {
+      return 'idx';
+    }
+    return row;
+  }).filter(row => row !== 'INDEX');
+  const oneLevel = allKeys.map(key => [key]);
+  const twoLevel = allKeys.reduce((acc, row) => {
+    return acc.concat(oneLevel.map(innerRow => innerRow.concat(row)));
+    // return acc;
+  }, []);
+  const threeLevel = allKeys.reduce((acc, row) => {
+    return acc.concat(twoLevel.map(innerRow => innerRow.concat(row)));
+  }, []);
+
+  const combos = (oneLevel.concat(twoLevel).concat(threeLevel)).map(combo => {
+    return Object.keys(combo.reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {}));
+  });
+
+  const allComboCounts = dataset.reduce((acc, row) => {
+    combos.forEach(combo => {
+      if (!acc[combo.join(SEPERATOR_SYMBOL)]) {
+        acc[combo.join(SEPERATOR_SYMBOL)] = 0;
+      }
+      const isPresent = combo.every(key => row[key]);
+      acc[combo.join(SEPERATOR_SYMBOL)] += (isPresent ? 1 : 0);
+    });
+    return acc;
+  }, {});
+
+  const reducedCounts = Object.entries(allComboCounts).reduce((acc, [key, count]) => {
+    if (count) {
+      acc[key] = count;
+    }
+    return acc;
+  }, {});
+
+  return Object.entries(reducedCounts).reduce((acc, [comboString, count]) => {
+    const combo = comboString.split(SEPERATOR_SYMBOL);
+    if (combo.length === 1) {
+      return acc;
+    }
+    return acc.concat({
+      sets: comboString.split(SEPERATOR_SYMBOL),
+      size: count
+    });
+  }, []);
+}
+
 export function prepTimeSeriesData(data) {
   const cats = Object.keys(data[0]);
   const timeseries = data.reduce((acc, row) => {
