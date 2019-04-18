@@ -8,38 +8,42 @@ import Sankey from './sankey';
 import Sunburst from './sunburst';
 import TimeSeries from './time-series';
 import WaffleBook from './waffle-book';
-import Venn from './venn-diagram';
+import ExamplesTable from './examples-table';
 
-import ExampleLabelTable from '../constants/example-label-table.json';
+
 
 class RootComponent extends React.Component {
+  componentDidMount(props) {
+    // defaults to loading goethe
+    this.props.getFile('Goethe');
+  }
   render() {
     const {
+      hoveredComment,
+      loading,
       showWafflebook,
       toggleWafflebookAndTimeseries
     } = this.props;
+    console.log(hoveredComment)
     return (
       <div>
-      <h1>{'Comparison & visualization of the forms of scientific texts in the nineteenth century'}</h1>
-      <h3>{'Case 1: Goethe and De Candolle'}</h3>
-      <h5>Agatha Kim</h5>
+        <h1>{'Comparison & visualization of the forms of scientific texts in the nineteenth century'}</h1>
+        <h3>{'Case 1: Goethe and De Candolle'}</h3>
+        <h5>Agatha Kim</h5>
       <div>DESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTIONDESCRIPTION</div>
-      {
-        
-        // <div><Venn data={this.props.vennData.toJS()}/></div>
-      }
-      <div>
+      {loading && <h1>LOADING</h1>}
+      {!loading && <div>
         <h5>GOETHE - TEXT NAME</h5>
         <div className="flex-down">
             <div className="flex">
               <div className="flex-down">
                 <Sunburst 
-                  hoveredComment={this.props.hoveredComment}
+                  hoveredComment={hoveredComment}
                   data={this.props.sunburstData.toJS()}/>
                 <div className="sentence-box">
                   <div>
-                    {this.props.hoveredComment ? 
-                      this.props.hoveredComment.sentence :
+                    {hoveredComment ? 
+                      hoveredComment.sentence :
                       'hover over grid to the right to select a sentence'}
                   </div>
                 </div>
@@ -52,7 +56,7 @@ class RootComponent extends React.Component {
                   (<WaffleBook
                     toggleLock={this.props.toggleLock}
                     lockedWaffle={this.props.lockedWaffle}
-                    hoveredComment={this.props.hoveredComment}
+                    hoveredComment={hoveredComment}
                     setHoveredComment={this.props.setHoveredComment}
                     data={this.props.waffleBookData.toJS()}/>) :
                   (<TimeSeries data={this.props.timeSeriesData.toJS()}/>)
@@ -60,26 +64,8 @@ class RootComponent extends React.Component {
             </div>
           </div>
         </div>
-
-      </div>
-      <div className="examples-table">
-        {ExampleLabelTable.map(row => {
-          return (<div 
-            className="flex-down small-font" 
-            key={row['Individual Category']}>
-              <div><b>CATEGORY:</b>
-                <span style={{
-                  background: COLORS[row['Individual Category']] 
-                }}>{`${row['Individual Category']}`}</span></div>
-              <div><b>SUPER CATEGORY:</b>
-                <span style={{
-                  background: COLORS[row['SuperCategory']] 
-                }}>{`${row['SuperCategory']}`}</span></div>
-              <div><i>Example from Goethe: </i>{`${row.Goethe}`}</div>
-              <div><i>Example from De Candolle: </i>{`${row['De Candolle']}`}</div>
-          </div>);
-        })}
-      </div>
+        <ExamplesTable />
+      </div>}
     </div>
     )
   }
@@ -87,15 +73,17 @@ class RootComponent extends React.Component {
 
 function mapStateToProps({base}) {
   return {
+    // data
     sankeyData: base.get('sankeyData'),
     timeSeriesData: base.get('timeSeriesData'),
     sunburstData: base.get('sunburstData'),
     waffleBookData: base.get('waffleBookData'),
     vennData: base.get('vennData'),
-    
+    // not data
     hoveredComment: base.get('hoveredComment'),
     lockedWaffle: base.get('lockedWaffle'),
-    showWafflebook: base.get('showWafflebook')
+    showWafflebook: base.get('showWafflebook'),
+    loading: base.get('loading')
   };
 }
 

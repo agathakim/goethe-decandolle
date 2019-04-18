@@ -1,41 +1,27 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import Immutable from 'immutable';
+import {fromJS} from 'immutable';
 
 import {
   generateCombinationCounts,
   prepTimeSeriesData,
   prepSunburst,
-  prepWaffleData,
-  generateCombinationCountsForVenn
+  prepWaffleData
 } from './data-analysis-scripts';
-import GoetheNumberedSentences from '../constants/goethe-numbered';
 
-// import TestData from '../constants/thought-component-goethe.json';
-import TestData from '../constants/data2.json';
-// const TestData = {};
-function prepareData(data) {
-  return TestData.map(row => {
-    return Object.entries(row).reduce((acc, [key, value]) => {
-      acc[key] = Number(value) || 0;
-      return acc;
-    }, {});
-  });
-}
-
-const preparedData = prepareData(TestData);
-const DEFAULT_STATE = Immutable.fromJS({
+const DEFAULT_STATE = fromJS({
   // DATA
-  data: preparedData,
-  sankeyData: generateCombinationCounts(preparedData.slice(0, 2)),
-  timeSeriesData: prepTimeSeriesData(preparedData),
-  sunburstData: prepSunburst(preparedData),
-  waffleBookData: prepWaffleData(preparedData),
-  vennData: generateCombinationCountsForVenn(preparedData.slice(0,2)),
+  data: [],
+  sankeyData: [],
+  timeSeriesData: [],
+  sunburstData: [],
+  waffleBookData: [],
+  numberedSents: [],
   // NOT DATA
   hoveredComment: null,
   lockedWaffle: false,
-  showWafflebook: true
+  showWafflebook: true,
+  loading: true
 });
 
 function setHoveredComment(state, payload) {
@@ -43,9 +29,10 @@ function setHoveredComment(state, payload) {
     return state
       .set('hoveredComment', null);
   }
+
   const row = state.getIn(['data', payload]).toJS();
   const cats = Object.keys(Object.entries(row).reduce((acc, [key, val]) => {
-    if (!val || key === 'INDEX') {
+    if (!val || key === 'index') {
       return acc;
     }
     acc[key] = true;
@@ -53,24 +40,34 @@ function setHoveredComment(state, payload) {
   }, {}));
   return state
     .set('hoveredComment', {
-      sentence: GoetheNumberedSentences[payload],
+      sentence: state.getIn(['numberedSents', payload]),
       idx: payload,
       categories: cats
     });
 }
 
-function toggleLock(state) {
-  return state.set('lockedWaffle', !state.get('lockedWaffle'));
-}
+const toggleLock = (state, payload) => state.set('lockedWaffle', !state.get('lockedWaffle'));
+const toggleWafflebookAndTimeseries = (state, payload) =>
+  state.set('showWafflebook', !state.get('showWafflebook'));
 
-function toggleWafflebookAndTimeseries(state) {
-  return state.set('showWafflebook', !state.get('showWafflebook'));
+function recieveData(state, payload) {
+  const {numberedSents, sentenceClassifcations} = payload;
+  const data = sentenceClassifcations;
+  return state
+    .set('loading', false)
+    .set('data', fromJS(data))
+    .set('numberedSents', fromJS(numberedSents))
+    .set('sankeyData', fromJS(generateCombinationCounts(data.slice(0, 2))))
+    .set('timeSeriesData', fromJS(prepTimeSeriesData(data)))
+    .set('sunburstData', fromJS(prepSunburst(data)))
+    .set('waffleBookData', fromJS(prepWaffleData(data)));
 }
 
 const actionFuncMap = {
   'set-hovered-sentence': setHoveredComment,
   'toggle-lock': toggleLock,
-  'toggle-waffle-plot-and-timeseries': toggleWafflebookAndTimeseries
+  'toggle-waffle-plot-and-timeseries': toggleWafflebookAndTimeseries,
+  'recieve-data': recieveData
 };
 const NULL_ACTION = (state, payload) => state;
 

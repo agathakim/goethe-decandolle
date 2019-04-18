@@ -1,12 +1,5 @@
 import React from 'react';
-
 import {Sunburst} from 'react-vis';
-import {categoryRelationships} from '../constants';
-
-const categoryRelationshipsMaps = categoryRelationships.reduce((acc, {superCat, cat}) => {
-  acc[superCat] = cat;
-  return acc;
-}, {})
 
 function updateData(data, hoveredComment) {
   if (!hoveredComment) {

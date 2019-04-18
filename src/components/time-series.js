@@ -5,7 +5,7 @@ import {COLORS} from '../constants';
 export default class TimeSeries extends React.Component {
   render() {
     const maxY = Object.entries(this.props.data)
-      .filter(([key, series]) => key !== 'INDEX')
+      .filter(([key, series]) => key !== 'index')
       .reduce((acc, [key, row]) => {
         return Math.max(acc, row.reduce((mem, {y}) => Math.max(y, mem), 0));
       }, 0);
@@ -27,7 +27,7 @@ export default class TimeSeries extends React.Component {
         />
         <HorizontalGridLines/>
         {Object.entries(this.props.data)
-            .filter(([key, series]) => key !== 'INDEX')
+            .filter(([key, series]) => key !== 'index')
             .map(([cat, series]) => <LineSeries 
               color={COLORS[cat]}
               data={series.map(d => ({...d, y: d.y + 1}))} 
