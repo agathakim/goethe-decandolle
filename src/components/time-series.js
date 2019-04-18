@@ -11,6 +11,7 @@ export default class TimeSeries extends React.Component {
       }, 0);
     return (
       <XYPlot 
+        animation
         width={600} 
         height={500} 
         yDomain={[1.1, maxY]}

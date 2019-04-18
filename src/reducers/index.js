@@ -21,7 +21,8 @@ const DEFAULT_STATE = fromJS({
   hoveredComment: null,
   lockedWaffle: false,
   showWafflebook: true,
-  loading: true
+  loading: true,
+  selectedFile: 'Goethe'
 });
 
 function setHoveredComment(state, payload) {
@@ -51,13 +52,14 @@ const toggleWafflebookAndTimeseries = (state, payload) =>
   state.set('showWafflebook', !state.get('showWafflebook'));
 
 function recieveData(state, payload) {
-  const {numberedSents, sentenceClassifcations} = payload;
+  const {filePrefix, numberedSents, sentenceClassifcations} = payload;
   const data = sentenceClassifcations;
   return state
     .set('loading', false)
+    .set('selectedFile', filePrefix)
     .set('data', fromJS(data))
     .set('numberedSents', fromJS(numberedSents))
-    .set('sankeyData', fromJS(generateCombinationCounts(data.slice(0, 2))))
+    // .set('sankeyData', fromJS(generateCombinationCounts(data.slice(0, 2))))
     .set('timeSeriesData', fromJS(prepTimeSeriesData(data)))
     .set('sunburstData', fromJS(prepSunburst(data)))
     .set('waffleBookData', fromJS(prepWaffleData(data)));

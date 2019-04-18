@@ -29,6 +29,7 @@ export default class SunburstChart extends React.Component {
     const {data, hoveredComment} = this.props;
     return (
       <Sunburst
+        animation
         hideRootNode
         opacity={0.75}
         colorType="literal"
