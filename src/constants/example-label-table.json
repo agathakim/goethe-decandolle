@@ -2,7 +2,7 @@
 "SuperCategory":"Descriptive",
 "Individual Category":"Empirical",
 "Goethe":"“The [Ranunculus aquaticus] leaves produced underwater consist of threadlike ribs, while those developed above water are fully anastomosed and form a unified surface.” (19)",
-"De Candolle":"“Likewise the birches, whose bark presents a great number of superimposed epidermis, resist coldness astonishingly” (DC2,365)"
+"De Candolle":"“Likewise the birches, whose bark presents a great number of superimposed epidermis, resist coldness astonishingly” (DC2,365), “But one cannot deny that in some fairly numerous cases the symmetry seems disturbed.” (DC3, 238)"
 },{
   "SuperCategory":"Descriptive",
   "Individual Category":"Historical",
@@ -36,7 +36,7 @@
 },{
   "SuperCategory":"Characterizing",
   "Individual Category":"Romantic",
-  "Goethe":"“There is a hidden relationship among various external parts of the plant which develop one after the other and, as it were, one out of the other … The process by which one and the sane organ appears in a variety of forms has been called the metamorphosis of plants.” (5)",
+  "Goethe":"“There is a hidden relationship among various external parts of the plant which develop one after the other and, as it were, one out of the other … The process by which one and the sane organ appears in a variety of forms has been called [the metamorphosis of plants].” (5)",
   "De Candolle":"“For the plants which have the same type are not more analogous than the crystals which have the similar primitive molecules. If botany is much behind mineralogy in this regard, it results, on the one hand, from all these facts being submitted to a particular force (vital force,) whose laws are much more obscure and difficult to study than those of analogy and attraction.” (DC3, 241)"
 },{
   "SuperCategory":"Logical",
@@ -47,7 +47,7 @@
   "SuperCategory":"Logical",
   "Individual Category":"Inductive",
   "Goethe":"“Thus, a stamen emerges when the organs, which earlier expanded to form petals, reappear in a highly contracted and much more refined state.” (39)",
-  "De Candolle":"“Even if it is impossible to find a flower whose petals were geometrically the same, or a leaf whose two sides were mathematically similar, there is no denying that one is struck by the kind of regularity of these organs.” (DC3, 238; tagged with both Romantic and Classical categories)"
+  "De Candolle":"“Light is the agent which operates the greatest number of phenomena of the plant life.” (DC2, 369), “Even if it is impossible to find a flower whose petals were geometrically the same, or a leaf whose two sides were mathematically similar, there is no denying that one is struck by the kind of regularity of these organs.” (DC3, 238; tagged with both Romantic and Classical categories)"
 },{
   "SuperCategory":"Logical",
   "Individual Category":"Deductive",
