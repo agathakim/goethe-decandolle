@@ -12,9 +12,9 @@ import ExamplesTable from './examples-table';
 
 const files = [
   {name: 'Goethe', filePrefix: 'Goethe'},
-  {name: 'De Candolle 1', filePrefix: 'DC1'},
-  {name: 'De Candolle 2', filePrefix: 'DC2'},
-  {name: 'De Candolle 3', filePrefix: 'DC3'}
+  {name: 'De Candolle 1 (DC1)', filePrefix: 'DC1'},
+  {name: 'De Candolle 2 (DC2)', filePrefix: 'DC2'},
+  {name: 'De Candolle 3 (DC3)', filePrefix: 'DC3'}
 ];
 
 class RootComponent extends React.Component {
@@ -39,7 +39,7 @@ class RootComponent extends React.Component {
         </div>
         <h5>By Agatha Kim</h5>
 
-        <div>'"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'</div>
+        <div>'"Still testing - "'</div>
 
         <h5>Text selection</h5>
         <div className="flex">
@@ -47,8 +47,8 @@ class RootComponent extends React.Component {
           files.map(({name, filePrefix}) => {
             const variableClass = selectedFile === 'filePrefix' ? 'selected-file' : '';
             const className = `file ${variableClass}`;
-            return (<div 
-              key={name} 
+            return (<div
+              key={name}
               onClick={() => this.props.getFile(filePrefix)}
               className={className}>
               {name}
@@ -64,12 +64,12 @@ class RootComponent extends React.Component {
         <div className="flex-down">
             <div className="flex">
               <div className="flex-down">
-                <Sunburst 
+                <Sunburst
                   hoveredComment={hoveredComment}
                   data={this.props.sunburstData.toJS()}/>
                 <div className="sentence-box">
                   <div>
-                    {hoveredComment ? 
+                    {hoveredComment ?
                       hoveredComment.sentence :
                       'hover over grid to the right to select a sentence'}
                   </div>
@@ -79,7 +79,7 @@ class RootComponent extends React.Component {
                 <button onClick={toggleWafflebookAndTimeseries}>
                   {`Show ${showWafflebook ? 'TimeSeries' : 'Grid'}`}
                 </button>
-                {showWafflebook ? 
+                {showWafflebook ?
                   (<WaffleBook
                     toggleLock={this.props.toggleLock}
                     lockedWaffle={this.props.lockedWaffle}
