@@ -35,11 +35,21 @@ class RootComponent extends React.Component {
       <div>
         <div className="flex-down center">
           <h1>{'Comparison & visualization of the forms of scientific texts in the nineteenth century'}</h1>
-          <h3>{'Case 1: Goethe and De Candolle'}</h3>
+          <h3>{'Case 1: Goethe and De Candolle (DC1)'}</h3>
         </div>
         <h5>By Agatha Kim</h5>
 
-        <div>'"Still testing - "'</div>
+        <div>'Left: Goethe, Metamorphosis of Plants
+This work was originally published in 1790, but was translated into French only in 1829. After the famous public debate between the two leading French naturalists Georges Cuvier and Étienne Geoffroy Saint-Hilaire on the theories of animal structures and the methods and philosophies behind them, Goethe’s work was put in the spotlight, and was published in a French-German edition in 1831.
+In this work, Goethe described plant growth in terms of serial homology, where a plant organ went through transformations (cotyledons, stem leaves, calyx, corolla, stamen, fruit, etc.) by alternately contracting and expanding its form. Goethe designated the leaf as the protean organ, or the Archetype of all the variations of plant forms. (The image to the right: the Archetypal plant as imagined by P. J. F. Turpin, 1837.) He considered these potential forms as equal in value—there was no hierarchy between the “regular” and “irregular” forms, which was a main disagreement between Goethe and De Candolle.
+'</div>
+
+<div>'Right: DC1: De Candolle, Essai sur les propriétés médicales des plantes (1804)
+De Candolle’s goal in this work was to assert his Theory of Analogy, which argued that there was continuity between plant forms and properties. However, this theory asked one to look beyond the immediately visible plant forms because analogous plants could produce various effects while some non-analogous plants could produce similar effects on human. Instead, one had to distinguish which plant properties and structures were normative or accidental, as well as consider the modes in which plants produced their effects.
+De Candolle promised that this theory would help get rid of the apparent anomalies and re-classify them correctly according to the natural order, which would benefit the practical uses of plant medicines, especially in the colonial world.
+Although he argued that the environment could modify plant forms and properties and create the apparent anomalies, De Candolle remained silent, unlike Goethe or Saint-Hilaire, on the historical and evolutionary implications that these anomalies could offer.
+'</div>
+
 
         <h5>Text selection</h5>
         <div className="flex">

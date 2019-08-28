@@ -1,7 +1,7 @@
 
 export const COLORS = {
   Descriptive: '#7030A0',
-  Empirical: '#9933FF',
+  Empirical: 'FFFF03',
   'Historical, descriptive': '#660066',
   Historical: '#660066',
   'Classificatory definition': '#CC3399',
@@ -12,13 +12,13 @@ export const COLORS = {
   Philosophical: '#66FFCC',
   'Philosophical, epistemological': '#66FFCC',
   Methodological: '#00CC99',
-  Classical: '#006600',
-  Romantic: '#00FF02',
+  Classical: '00B318',
+  Romantic: '62ACFF',
 
   Logical: '#FF0000',
-  'Rational, speculative': '#FF3301',
-  Inductive: '#FF99CB',
-  Deductive: '#990001',
+  'Rational, speculative': 'FFA2E1',
+  Inductive: 'BA00B4',
+  Deductive: '80FF00',
   Analogical: '#FF0166',
 
   Decorative: '#FFC001',
