@@ -3,15 +3,16 @@ import Sunburst from './sunburst';
 import WaffleBook from './waffle-book';
 
 import Picker from './file-picker';
-import {files, DESCRIPTIONS} from '../constants';
+import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
 import {getFile, prepSunburst, prepWaffleData} from '../utils';
 
 export default class Column extends React.Component {
   constructor(props) {
     super();
+    console.log(props);
     this.state = {
       hoveredComment: null,
-      selectedFile: files[0].filePrefix,
+      selectedFile: props.defaultSelection || files[0].filePrefix,
       sunburstData: null,
       waffleBookData: null,
       loading: true,
@@ -84,19 +85,29 @@ export default class Column extends React.Component {
     } = this.state;
     if (loading) {
       return (
-        <div className="flex-down">
+        <div
+          style={{
+            width: `${WAFFLE_WIDTH}px`,
+          }}
+          className="flex-down center full-height"
+        >
           <h1>LOADING</h1>
         </div>
       );
     }
 
     return (
-      <div className="flex-down">
+      <div
+        style={{
+          width: `${WAFFLE_WIDTH}px`,
+        }}
+        className="flex-down"
+      >
         <Picker
           onSelect={newPrefix => this.updateData(newPrefix)}
           selectedFile={selectedFile}
         />
-        <div className="flex-down">
+        <div className="flex-down descriptions">
           <h3>{DESCRIPTIONS[selectedFile].fullName}</h3>
           <p>{DESCRIPTIONS[selectedFile].description}</p>
         </div>

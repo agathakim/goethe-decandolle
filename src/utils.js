@@ -55,7 +55,7 @@ export function prepSunburst(data) {
     children: Object.entries(groups).map(([superCat, children]) => {
       return {
         label: superCat,
-        color: COLORS[superCat],
+        // color: COLORS[superCat],
         children: children.map(child => {
           return {
             ...child,

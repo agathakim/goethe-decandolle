@@ -1,9 +1,7 @@
 import React from 'react';
 import {XYPlot, PolygonSeries} from 'react-vis';
-import {TARGET_WIDTH} from '../constants';
-const WIDTH = 600;
+import {TARGET_WIDTH, WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
 
-const HEIGHT = 450;
 class StaticWaffle extends React.Component {
   render() {
     const {data, setHoveredComment, lockedWaffle, toggleLock} = this.props;
@@ -15,8 +13,8 @@ class StaticWaffle extends React.Component {
         }}
       >
         <XYPlot
-          height={HEIGHT}
-          width={WIDTH}
+          height={WAFFLE_HEIGHT}
+          width={WAFFLE_WIDTH}
           margin={0}
           onMouseOut={d => {
             if (!lockedWaffle) {
@@ -73,7 +71,7 @@ class StaticWaffle extends React.Component {
                     style={{
                       fill: 'red',
                       fillOpacity: 0,
-                      stroke: '#fff',
+                      stroke: '#D6D6CE',
                       strokeWidth: '2.5px',
                     }}
                     data={[
@@ -93,32 +91,39 @@ class StaticWaffle extends React.Component {
   }
 }
 
+function getHoveredSquares(hoveredComment, data) {
+  let hoveredSquares = [];
+  if (!hoveredComment) {
+    return hoveredSquares;
+  }
+  for (let jdx = 0; jdx < data.length; jdx++) {
+    for (let idx = 0; idx < data[jdx].length; idx++) {
+      const {sentenceIdx, offset, colors} = data[jdx][idx];
+      if (sentenceIdx === hoveredComment.idx) {
+        hoveredSquares = colors.map((color, kdx) => ({
+          color,
+          coords: [
+            {x: offset + kdx, y: jdx},
+            {x: offset + 1 + kdx, y: jdx},
+            {x: offset + 1 + kdx, y: jdx + 1},
+            {x: offset + kdx, y: jdx + 1},
+          ],
+        }));
+      }
+    }
+  }
+  return hoveredSquares;
+}
+
 class DynamicWaffle extends React.Component {
   render() {
     const {hoveredComment, data, toggleLock} = this.props;
-    let hoveredSquares = [];
-    for (let jdx = 0; jdx < data.length; jdx++) {
-      for (let idx = 0; idx < data[jdx].length; idx++) {
-        const {sentenceIdx, offset, colors} = data[jdx][idx];
-        if (sentenceIdx === hoveredComment.idx) {
-          hoveredSquares = colors.map((color, kdx) => ({
-            color,
-            coords: [
-              {x: offset + kdx, y: jdx},
-              {x: offset + 1 + kdx, y: jdx},
-              {x: offset + 1 + kdx, y: jdx + 1},
-              {x: offset + kdx, y: jdx + 1},
-            ],
-          }));
-        }
-      }
-    }
-
+    const hoveredSquares = getHoveredSquares(hoveredComment, data);
     return (
       <div className="dynamic-waffle">
         <XYPlot
-          height={HEIGHT}
-          width={WIDTH}
+          height={WAFFLE_HEIGHT}
+          width={WAFFLE_WIDTH}
           margin={0}
           xDomain={[0, TARGET_WIDTH + 1]}
           yDomain={[data.length, 0]}
@@ -135,21 +140,23 @@ class DynamicWaffle extends React.Component {
               />
             );
           })}
-          <PolygonSeries
-            onSeriesClick={toggleLock}
-            style={{
-              stroke: 'black',
-              strokeWidth: '4px',
-              fill: 'red',
-              fillOpacity: 0,
-            }}
-            data={[
-              hoveredSquares[0].coords[0],
-              hoveredSquares[hoveredSquares.length - 1].coords[1],
-              hoveredSquares[hoveredSquares.length - 1].coords[2],
-              hoveredSquares[0].coords[3],
-            ]}
-          />
+          {hoveredSquares.length && (
+            <PolygonSeries
+              onSeriesClick={toggleLock}
+              style={{
+                stroke: 'black',
+                strokeWidth: '4px',
+                fill: 'red',
+                fillOpacity: 0,
+              }}
+              data={[
+                hoveredSquares[0].coords[0],
+                hoveredSquares[hoveredSquares.length - 1].coords[1],
+                hoveredSquares[hoveredSquares.length - 1].coords[2],
+                hoveredSquares[0].coords[3],
+              ]}
+            />
+          )}
         </XYPlot>
       </div>
     );
@@ -173,13 +180,11 @@ export default class WaffleBook extends React.Component {
           lockedWaffle={lockedWaffle}
           setHoveredComment={setHoveredComment}
         />
-        {hoveredComment && (
-          <DynamicWaffle
-            toggleLock={toggleLock}
-            data={data}
-            hoveredComment={hoveredComment}
-          />
-        )}
+        <DynamicWaffle
+          toggleLock={toggleLock}
+          data={data}
+          hoveredComment={hoveredComment}
+        />
         <div> {`click to ${lockedWaffle ? 'un' : ''}lock`}</div>
       </div>
     );

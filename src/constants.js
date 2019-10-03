@@ -69,6 +69,94 @@ export const COLORS = {
   'Blank statement': '#FFFFFF',
 };
 
+export const COLORS_FOR_LEGEND = [
+  {
+    label: 'Romantic',
+    tag: '(Rom)',
+    color: '#62ACFF',
+  },
+  {
+    label: 'Classical',
+    tag: '(Clas)',
+    color: '#00B318',
+  },
+  {
+    label: 'Empirical',
+    tag: '(Emp)',
+    color: '#FFFF03',
+  },
+  {
+    label: 'Inductive',
+    tag: '(Induc)',
+    color: '#BA00B4',
+  },
+  {
+    label: 'Deductive',
+    tag: '(Deduc)',
+    color: '#80FF00',
+  },
+  {
+    label: 'Rational/Speculative',
+    tag: '(Ratio)',
+    color: '#FFA2E1',
+  },
+  {
+    label: 'Analogical',
+    tag: '(Anlg)',
+    color: '#FF0011',
+  },
+  {
+    label: 'Methodological',
+    tag: '(Method)',
+    color: '#A9FFD2',
+  },
+  {
+    label: 'Historical/Descriptive',
+    tag: '(Hist)',
+    color: '#1100FF',
+  },
+  {
+    label: 'Philosophical definition',
+    tag: '(Phil)',
+    color: '#CC99FF',
+  },
+  {
+    label: 'Metaphorical/Visual',
+    tag: '(Metaph)',
+    color: '#FFAE5C',
+  },
+  {
+    label: 'Metaphors attributing agency to nature',
+    tag: '(Agncy)',
+    color: '#9F5103',
+  },
+  {
+    label: 'Future/Utility',
+    tag: '(Fut)',
+    color: '#FF007F',
+  },
+  {
+    label: 'Classificatory',
+    tag: '(Clsf)',
+    color: '#666600',
+  },
+  {
+    label: 'Numerical',
+    tag: '(Num)',
+    color: '#000000',
+  },
+  {
+    label: 'Writing aim/direction',
+    tag: '(Wr)',
+    color: '#808080',
+  },
+  {
+    label: 'Blank statement',
+    tag: '(Bl)',
+    color: '#FFFFFF',
+  },
+];
+
 export const categoryRelationships = [
   {cat: 'Empirical', superCat: 'Descriptive'},
   {cat: 'Historical', superCat: 'Descriptive'},
@@ -87,9 +175,7 @@ export const categoryRelationships = [
   {cat: 'Future-Utility', superCat: 'Persuasive'},
   {cat: 'Writing direction', superCat: 'Persuasive'},
   {cat: 'Blank', superCat: 'NA'},
-];
-
-export const TARGET_WIDTH = 10;
+].map(d => ({cat: d.cat, superCat: ''}));
 
 // Descriptions of the botanical texts by Goethe and De Candolle
 /* eslint-disable max-len */
@@ -119,3 +205,7 @@ export const DESCRIPTIONS = {
   },
 };
 /* eslint-enable max-len */
+
+export const TARGET_WIDTH = 10;
+export const WAFFLE_WIDTH = 600;
+export const WAFFLE_HEIGHT = 450;

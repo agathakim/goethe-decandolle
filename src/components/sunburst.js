@@ -1,5 +1,6 @@
 import React from 'react';
-import {Sunburst} from 'react-vis';
+import {Treemap} from 'react-vis';
+import {WAFFLE_WIDTH} from '../constants';
 
 function updateData(data, hoveredComment) {
   if (!hoveredComment) {
@@ -9,14 +10,14 @@ function updateData(data, hoveredComment) {
     acc[row] = true;
     return acc;
   }, {});
-  // AGGG INCREDIBLY HACKY STYLE SETTING !!!??! AGHHHH 
+  // AGGG INCREDIBLY HACKY STYLE SETTING !!!??! AGHHHH
   for (let i = 0; i < data.children.length; i++) {
     for (let j = 0; j < data.children[i].children.length; j++) {
       if (categories[data.children[i].children[j].cat]) {
         data.children[i].children[j].style = {
           strokeWidth: '5px',
           stroke: 'black',
-          strokeOpacity: 1
+          strokeOpacity: 1,
         };
       }
     }
@@ -24,18 +25,18 @@ function updateData(data, hoveredComment) {
   return data;
 }
 
-export default class SunburstChart extends React.Component {
+export default class Radial extends React.Component {
   render() {
     const {data, hoveredComment} = this.props;
     return (
-      <Sunburst
-        animation
-        hideRootNode
-        opacity={0.75}
+      <Treemap
+        opacity={1}
         colorType="literal"
-        width={350}
+        width={WAFFLE_WIDTH}
         height={350}
-        data={updateData(data, hoveredComment)}/>
+        getLabel={d => d.cat}
+        data={updateData(data, hoveredComment)}
+      />
     );
   }
 }
