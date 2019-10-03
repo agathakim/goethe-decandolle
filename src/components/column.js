@@ -1,6 +1,7 @@
 import React from 'react';
 import Sunburst from './sunburst';
 import WaffleBook from './waffle-book';
+import Graph from './graph';
 
 import Picker from './file-picker';
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
@@ -120,6 +121,9 @@ export default class Column extends React.Component {
               setHoveredComment={this.setHoveredComment}
               data={waffleBookData}
             />
+          </div>
+          <div>
+            <Graph data={waffleBookData} />
           </div>
           <div className="flex-down">
             {<Sunburst hoveredComment={hoveredComment} data={sunburstData} />}
