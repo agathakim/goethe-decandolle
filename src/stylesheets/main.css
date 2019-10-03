@@ -4,7 +4,8 @@ a {
 
 html,
 body,
-#vue-hack {
+#goethe-application {
+  background: #D6D6CE;
   font-family: Verdana, Geneva, sans-serif;
   height: 100%;
   margin: 0;
@@ -12,7 +13,7 @@ body,
   width: 100%;
 }
 
-#vue-hack {
+#goethe-application {
   padding: 10px 90px;
   height: calc(100% - 20px);
   width: calc(100% - 180px);
@@ -32,7 +33,9 @@ h1 {
   display: flex;
   flex-direction: column;
 }
-
+.full-height {
+  height: auto;
+}
 .center {
   align-items: center;
   justify-content: center;
@@ -72,4 +75,8 @@ h1 {
   font-weight: bolder;
   padding: 0 10px;
   margin-right: 20px;
+}
+
+.descriptions p {
+  font-size: 10px;
 }
