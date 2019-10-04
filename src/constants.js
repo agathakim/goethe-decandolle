@@ -59,6 +59,7 @@ const PRE_COLORS = {
   'Philosophical definition': '#CC99FF',
   Philosophical: '#CC99FF',
   'Metaphorical/Visual': '#FFAE5C',
+  'metaphorical, visual': '#FFAE5C',
   Metaphorical: '#FFAE5C',
   'Metaphorical-Agency to nature': '#9F5103',
   'Metaphors attributing agency to nature': '#9F5103',

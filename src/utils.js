@@ -33,6 +33,24 @@ export const getFile = filePrefix =>
     };
   });
 
+export function prepBarChart(data, validColors) {
+  const counts = data.reduce((acc, row) => {
+    Object.keys(row).forEach(key => {
+      acc[key] = (acc[key] || 0) + row[key];
+    });
+    return acc;
+  });
+  delete counts.index;
+  return Object.entries(counts).map(([cat, count]) => {
+    const color = COLORS[cat.toLowerCase()];
+    return {
+      cat,
+      count: validColors[color] ? count : 0,
+      color,
+    };
+  });
+}
+
 export function prepSunburst(data) {
   const countsByCat = data.reduce((acc, row) => {
     categoryRelationships.forEach(({cat}) => {

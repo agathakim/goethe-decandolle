@@ -1,3 +1,4 @@
+
 a {
   cursor: pointer;
 }
@@ -55,17 +56,21 @@ h1 {
   font-size: 8px;
 }
 
-.sentence-box {
-  font-size: 10px;
-  width: 300px;
-}
 
 .small-font {
   font-size: 8px;
 }
 
-.examples-table {
-  max-width: 500px;
+.medium-font {
+  font-size: 12px;
+}
+
+.rv-xy-plot__axis__tick__line {
+  display: none;
+}
+
+.rv-xy-plot__axis__tick__text {
+  transform: translate(-1px);
 }
 
 .file {
@@ -79,4 +84,24 @@ h1 {
 
 .descriptions p {
   font-size: 10px;
+}
+
+
+.tooltip {
+  display: inline-block;
+  font-size: 10px;
+  position: absolute;
+  background: black;
+  border-radius: 5px;
+  color: white;
+  padding: 5px;
+  max-width: 200px;
+}
+
+.legend {
+  align-items: center;
+}
+
+.legend h3 {
+  font-size: 18px;
 }

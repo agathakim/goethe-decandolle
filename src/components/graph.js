@@ -1,168 +1,188 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {
-  forceSimulation,
-  forceManyBody,
-  forceCenter,
-  forceX,
-  forceY,
-  forceCollide,
-  forceLink,
-} from 'd3-force';
-import {select} from 'd3-selection';
+import {scaleLinear} from 'd3-scale';
 
 import {WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
-const width = 960;
-const height = 500;
 
-// *****************************************************
-// ** d3 functions to manipulate attributes
-// *****************************************************
+function computeDomain(nodes) {
+  return nodes.reduce(
+    (acc, {x, y}) => {
+      return {
+        minX: Math.min(acc.minX, x),
+        maxX: Math.max(acc.maxX, x),
+        minY: Math.min(acc.minY, y),
+        maxY: Math.max(acc.maxY, y),
+      };
+    },
+    {
+      minX: Infinity,
+      maxX: -Infinity,
+      minY: Infinity,
+      maxY: -Infinity,
+    },
+  );
+}
 
-const enterNode = selection => {
-  selection.attr('class', 'node');
-  selection
-    .append('circle')
-    .attr('r', 8)
-    .attr('fill', 'none')
-    .attr('stroke', 'black')
-    .on('mouseover', d => {
-      console.log(d);
-    });
+function prepareRenderLink(xScale, yScale) {
+  /* eslint-disable react/display-name */
+  return d => (
+    <line
+      key={`${d.source.sentenceIdx}-${d.target.sentenceIdx}-${d.color}`}
+      x1={xScale(d.source.x)}
+      x2={xScale(d.target.x)}
+      y1={yScale(d.source.y)}
+      y2={yScale(d.target.y)}
+      strokeOpacity="0.3"
+      stroke={d.color}
+    />
+  );
+}
 
-  const marks = selection
-    .selectAll('tag')
-    .data(
-      d => d.colors.map(color => ({color, sentenceIdx: d.sentenceIdx})),
-      d => `${d.color}-${d.sentenceIdx}`,
-    )
-    .enter()
-    .append('circle')
-    .attr('r', 4)
-    .attr('class', 'tag')
-    .attr('fill', d => d.color)
-    .attr('cx', (d, i, x) => {
-      return Math.cos((Math.PI * 2 * i) / x.length) * 4;
-    })
-    .attr('cy', (d, i, x) => {
-      return Math.sin((Math.PI * 2 * i) / x.length) * 4;
-    });
-  marks.exit().remove();
+function renderInnerCircles(node) {
+  const radius = node.colors.length > 1 ? 4 : 0;
+  return (color, idx) => {
+    const angle = (Math.PI * 2 * idx) / node.colors.length;
+    return (
+      <circle
+        key={`node-${node.sentenceIdx}-${color}-${idx}`}
+        fill={color}
+        cx={Math.cos(angle) * radius}
+        cy={Math.sin(angle) * radius}
+        r="4"
+      />
+    );
+  };
+}
 
-  // selection
-  //   .append('text')
-  //   .attr('x', d => d.size + 5)
-  //   .attr('dy', '.35em')
-  //   .text(d => d.key);
-};
-
-const updateNode = selection =>
-  selection.attr('transform', d => `translate(${d.x},${d.y})`);
-
-const enterLink = selection =>
-  selection
-    .attr('class', 'link')
-    .attr('stroke', d => d.color)
-    .attr('stroke-opacity', 0.2)
-    .attr('stroke-width', 1);
-
-const updateLink = selection => {
-  selection
-    .attr('x1', d => d.source.x)
-    .attr('y1', d => d.source.y)
-    .attr('x2', d => d.target.x)
-    .attr('y2', d => d.target.y);
-};
-
-const updateGraph = selection => {
-  selection.selectAll('.node').call(updateNode);
-  selection.selectAll('.link').call(updateLink);
-};
-
-// *****************************************************
-// ** Graph and App components
-// *****************************************************
-let count = 0;
 export default class Graph extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      progress: 0,
+      links: [],
+      nodes: [],
+      hoveredComment: null,
+    };
+  }
   componentDidMount() {
-    this.d3Graph = select(ReactDOM.findDOMNode(this.refs.graph));
-    this.force = forceSimulation(this.props.nodes)
-      .force(
-        'link',
-        forceLink()
-          .distance(10)
-          .links(this.props.links),
-      )
-      // .force('x', forceX().strength(0.002))
-      // .force('y', forceY().strength(0.002))
-      .force('center', forceCenter(WAFFLE_WIDTH / 2, WAFFLE_HEIGHT / 2))
-      .force(
-        'collide',
-        forceCollide()
-          .radius(d => 8)
-          .iterations(2),
-      )
-      .force('charge', forceManyBody().strength(-50));
-    this.force.on('tick', () => {
-      if (count > 1000) {
-        this.force.stop();
-        console.log('halt');
-        return;
+    this.graphWorker = new Worker('./graph-worker.js', {type: 'module'});
+    this.graphWorker.onmessage = event => {
+      switch (event.data.type) {
+        default:
+        case 'tick':
+          this.setState({progress: event.data.progress});
+          return;
+        case 'end':
+          this.setState({
+            progress: 1,
+            links: event.data.links,
+            nodes: event.data.nodes,
+          });
+          return;
       }
-      // after force calculation starts, call updateGraph
-      // which uses d3 to manipulate the attributes,
-      // and React doesn't have to go through lifecycle on each tick
-      this.d3Graph.call(updateGraph);
-      count += 1;
-      console.log(count);
+    };
+    this.graphWorker.postMessage({
+      nodes: this.props.nodes,
+      links: this.props.links,
     });
-
-    this.updateGraph(this.props);
-  }
-
-  componentDidUpdate(nextProps) {
-    this.updateGraph(nextProps);
-  }
-
-  componentWillUnmount() {
-    this.force.stop();
-  }
-
-  updateGraph(nextProps) {
-    this.d3Graph = select(ReactDOM.findDOMNode(this.refs.graph));
-    console.log(nextProps.nodes);
-    const d3Nodes = this.d3Graph
-      .selectAll('.node')
-      .data(nextProps.nodes, node => node.sentenceIdx);
-    d3Nodes
-      .enter()
-      .append('g')
-      .call(enterNode);
-    d3Nodes.exit().remove();
-    d3Nodes.call(updateNode);
-
-    const d3Links = this.d3Graph
-      .selectAll('.link')
-      .data(nextProps.links, link => link.key);
-    d3Links
-      .enter()
-      .insert('line', '.node')
-      .call(enterLink);
-    d3Links.exit().remove();
-    d3Links.call(updateLink);
-
-    // we should actually clone the nodes and links
-    // since we're not supposed to directly mutate
-    // props passed in from parent, and d3's force function
-    // mutates the nodes and links array directly
-    // we're bypassing that here for sake of brevity in example
   }
 
   render() {
+    const {progress, links, nodes, hoveredComment} = this.state;
+    const {getSentence, showConnections} = this.props;
+    const margin = {
+      top: 30,
+      bottom: 30,
+      left: 30,
+      right: 30,
+    };
+    const {minX, maxX, minY, maxY} = computeDomain(nodes);
+
+    const xScale = scaleLinear()
+      .domain([minX, maxX])
+      .range([0, WAFFLE_WIDTH - margin.left - margin.right]);
+    const yScale = scaleLinear()
+      .domain([minY, maxY])
+      .range([0, WAFFLE_HEIGHT - margin.top - margin.bottom]);
+    const progessScale = scaleLinear()
+      .domain([0, 1])
+      .range([0, WAFFLE_WIDTH]);
+
     return (
-      <svg width={width} height={height}>
-        <g ref="graph" />
-      </svg>
+      <div style={{position: 'relative'}}>
+        <svg width={WAFFLE_WIDTH} height={WAFFLE_HEIGHT}>
+          <g transform={`translate(${margin.left}, ${margin.top})`}>
+            {progress < 1 && (
+              <rect
+                x="0"
+                y="0"
+                height="2"
+                width={progessScale(progress)}
+                fill="steelblue"
+              />
+            )}
+            {showConnections && links.map(prepareRenderLink(xScale, yScale))}
+            {nodes.map(node => {
+              return (
+                <g
+                  key={`node-${node.sentenceIdx}`}
+                  transform={`translate(${xScale(node.x)}, ${yScale(node.y)})`}
+                >
+                  {node.colors.map(renderInnerCircles(node))}
+                </g>
+              );
+            })}
+            {nodes.map(node => {
+              return (
+                <circle
+                  onMouseEnter={e => {
+                    this.setState({
+                      hoveredComment: {
+                        node,
+                        offsetX: xScale(node.x),
+                        offsetY: yScale(node.y),
+                      },
+                    });
+                  }}
+                  onMouseLeave={() => this.setState({hoveredComment: null})}
+                  key={`node-${node.sentenceIdx}`}
+                  fill="red"
+                  fillOpacity="0"
+                  stroke="black"
+                  cx={xScale(node.x)}
+                  cy={yScale(node.y)}
+                  r="10"
+                />
+              );
+            })}
+          </g>
+        </svg>
+        {hoveredComment && (
+          <div
+            className="tooltip"
+            style={{
+              top: hoveredComment.offsetY + 50,
+              left: hoveredComment.offsetX + 10,
+            }}
+          >
+            <div className="flex">
+              {hoveredComment.node.colors.map(color => {
+                return (
+                  <div
+                    key={`hover-${color}`}
+                    style={{
+                      height: '10px',
+                      width: '10px',
+                      backgroundColor: color,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            {getSentence(hoveredComment.node.sentenceIdx)}
+          </div>
+        )}
+        <span className="small-font">Hover to view sentences</span>
+      </div>
     );
   }
 }
