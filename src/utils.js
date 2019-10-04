@@ -93,7 +93,9 @@ export function prepWaffleData(data) {
       .filter(([key, count]) => Number(count) && key !== 'index')
       .map(([key, count]) => {
         if (!COLORS[key.toLowerCase()]) {
+          /* eslint-disable no-console */
           console.log(key.toLowerCase(), COLORS[key.toLowerCase()]);
+          /* eslint-enable no-console */
         }
         return COLORS[key.toLowerCase()];
       });
@@ -129,4 +131,23 @@ export function prepWaffleData(data) {
   });
 
   return offsettedRows;
+}
+
+export function computeDomain(nodes) {
+  return nodes.reduce(
+    (acc, {x, y}) => {
+      return {
+        minX: Math.min(acc.minX, x),
+        maxX: Math.max(acc.maxX, x),
+        minY: Math.min(acc.minY, y),
+        maxY: Math.max(acc.maxY, y),
+      };
+    },
+    {
+      minX: Infinity,
+      maxX: -Infinity,
+      minY: Infinity,
+      maxY: -Infinity,
+    },
+  );
 }

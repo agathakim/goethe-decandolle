@@ -6,6 +6,14 @@ import Picker from './file-picker';
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
 import {getFile, prepBarChart, prepWaffleData} from '../utils';
 
+function generateNodes(waffleBookData, validColors) {
+  return waffleBookData
+    .reduce((acc, row) => acc.concat(row), [])
+    .filter(d => {
+      return d.colors.every(color => validColors[color]);
+    });
+}
+
 function generateGraphLinks(graphNodes) {
   const colorGroups = Object.entries(
     graphNodes.reduce((acc, row) => {
@@ -43,14 +51,12 @@ export default class Column extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      hoveredComment: null,
       selectedFile: props.defaultSelection || files[0].filePrefix,
       barChartData: null,
       waffleBookData: null,
       loading: true,
       lockedWaffle: false,
     };
-    this.setHoveredComment = this.setHoveredComment.bind(this);
     this.setAsyncState = this.setAsyncState.bind(this);
     this.updateData = this.updateData.bind(this);
   }
@@ -77,11 +83,7 @@ export default class Column extends React.Component {
       return getFile(selectedFile).then(
         ({sentenceClassifcations, numberedSents}) => {
           const waffleBookData = prepWaffleData(sentenceClassifcations);
-          const graphNodes = waffleBookData
-            .reduce((acc, row) => acc.concat(row), [])
-            .filter(d => {
-              return d.colors.every(color => validColors[color]);
-            });
+          const graphNodes = generateNodes(waffleBookData, validColors);
 
           this.setState({
             data: sentenceClassifcations,
@@ -97,34 +99,9 @@ export default class Column extends React.Component {
     });
   }
 
-  setHoveredComment(payload) {
-    if (!isFinite(payload) || (!payload && payload !== 0)) {
-      this.setState({hoveredComment: null});
-      return;
-    }
-
-    const row = this.state.data[payload];
-    const cats = Object.keys(
-      Object.entries(row).reduce((acc, [key, val]) => {
-        if (!val || key === 'index') {
-          return acc;
-        }
-        acc[key] = true;
-        return acc;
-      }, {}),
-    );
-    this.setState({
-      hoveredComment: {
-        sentence: this.state.numberedSents[payload],
-        idx: payload,
-        categories: cats,
-      },
-    });
-  }
   render() {
     const {showConnections} = this.props;
     const {
-      hoveredComment,
       barChartData,
       loading,
       selectedFile,

@@ -2,12 +2,12 @@ import {
   forceSimulation,
   forceManyBody,
   forceCenter,
-  forceX,
-  forceY,
   forceCollide,
   forceLink,
 } from 'd3-force';
-import {WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
+import {scaleLinear} from 'd3-scale';
+import {WAFFLE_WIDTH, WAFFLE_HEIGHT, CHART_MARGIN} from '../constants';
+import {computeDomain} from '../utils';
 
 addEventListener('message', event => {
   const nodes = event.data.nodes;
@@ -40,4 +40,23 @@ addEventListener('message', event => {
   }
 
   postMessage({type: 'end', nodes, links});
+
+  const {minX, maxX, minY, maxY} = computeDomain(nodes);
+  const xScale = scaleLinear()
+    .domain([minX, maxX])
+    .range([CHART_MARGIN.left, WAFFLE_WIDTH - CHART_MARGIN.right]);
+  const yScale = scaleLinear()
+    .domain([minY, maxY])
+    .range([CHART_MARGIN.top, WAFFLE_HEIGHT - CHART_MARGIN.bottom]);
+  const ctx = event.data.canvas.getContext('2d');
+  ctx.globalAlpha = 0.3;
+
+  links.forEach(link => {
+    ctx.beginPath();
+    ctx.moveTo(xScale(link.source.x), yScale(link.source.y));
+    ctx.lineTo(xScale(link.target.x), yScale(link.target.y));
+    ctx.stroke();
+    ctx.strokeStyle = link.color;
+    ctx.closePath();
+  });
 });

@@ -88,14 +88,15 @@ h1 {
 
 
 .tooltip {
-  display: inline-block;
-  font-size: 10px;
-  position: absolute;
   background: black;
   border-radius: 5px;
   color: white;
-  padding: 5px;
+  display: inline-block;
+  font-size: 10px;
   max-width: 200px;
+  padding: 5px;
+  position: absolute;
+  z-index: 2;
 }
 
 .legend {
@@ -104,4 +105,19 @@ h1 {
 
 .legend h3 {
   font-size: 18px;
+}
+
+.node-graph {
+  z-index: 1;
+  position: absolute;
+}
+
+.link-graph {
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+.link-graph.hide {
+  opacity: 0;
 }

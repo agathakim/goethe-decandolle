@@ -222,3 +222,9 @@ export const DESCRIPTIONS = {
 export const TARGET_WIDTH = 10;
 export const WAFFLE_WIDTH = 600;
 export const WAFFLE_HEIGHT = 450;
+export const CHART_MARGIN = {
+  top: 30,
+  bottom: 30,
+  left: 30,
+  right: 30,
+};
