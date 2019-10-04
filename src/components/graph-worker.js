@@ -12,7 +12,6 @@ import {WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
 addEventListener('message', event => {
   const nodes = event.data.nodes;
   const links = event.data.links;
-  console.log(JSON.stringify(links, null, 2));
   const simulation = forceSimulation(nodes)
     .force(
       'link',

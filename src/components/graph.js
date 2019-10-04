@@ -107,6 +107,15 @@ export default class Graph extends React.Component {
       .domain([0, 1])
       .range([0, WAFFLE_WIDTH]);
 
+    const smallerLinks = links.filter(d => {
+      return (
+        Math.sqrt(
+          Math.pow(d.source.x - d.target.x, 2) +
+            Math.pow(d.source.y - d.target.y, 2),
+        ) > 10
+      );
+    });
+    console.log(smallerLinks.length, links);
     return (
       <div style={{position: 'relative'}}>
         <svg width={WAFFLE_WIDTH} height={WAFFLE_HEIGHT}>
@@ -120,7 +129,8 @@ export default class Graph extends React.Component {
                 fill="steelblue"
               />
             )}
-            {showConnections && links.map(prepareRenderLink(xScale, yScale))}
+            {showConnections &&
+              smallerLinks.map(prepareRenderLink(xScale, yScale))}
             {nodes.map(node => {
               return (
                 <g
