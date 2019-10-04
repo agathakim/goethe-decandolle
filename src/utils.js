@@ -61,7 +61,7 @@ export function prepSunburst(data) {
             ...child,
             children: [],
             label: child.cat,
-            color: COLORS[child.cat],
+            color: COLORS[child.cat.toLowerCase()],
           };
         }),
       };
@@ -73,7 +73,12 @@ export function prepWaffleData(data) {
   const blocks = data.map(row => {
     return Object.entries(row)
       .filter(([key, count]) => Number(count) && key !== 'index')
-      .map(([key, count]) => COLORS[key]);
+      .map(([key, count]) => {
+        if (!COLORS[key.toLowerCase()]) {
+          console.log(key.toLowerCase(), COLORS[key.toLowerCase()]);
+        }
+        return COLORS[key.toLowerCase()];
+      });
   });
   // greedy algorithm
 

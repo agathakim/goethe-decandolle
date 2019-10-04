@@ -40,7 +40,7 @@ export const files = [
 //   'Writing direction': '#0066FF',
 // };
 
-export const COLORS = {
+const PRE_COLORS = {
   Romantic: '#62ACFF',
   Classical: '#00B318',
   Empirical: '#FFFF03',
@@ -48,14 +48,21 @@ export const COLORS = {
   Deductive: '#80FF00',
   'Rational/Speculative': '#FFA2E1',
   'Rational, Speculative': '#FFA2E1',
+  'Rational-Speculative': '#FFA2E1',
   Analogical: '#FF0011',
   Methodological: '#A9FFD2',
   'Historical/Descriptive': '#1100FF',
   'Historical, Descriptive': '#1100FF',
+  'Historical, descriptive': '#1100FF',
   Historical: '#1100FF',
+  'Philosophical, epistemological': '#CC99FF',
   'Philosophical definition': '#CC99FF',
+  Philosophical: '#CC99FF',
   'Metaphorical/Visual': '#FFAE5C',
+  Metaphorical: '#FFAE5C',
+  'Metaphorical-Agency to nature': '#9F5103',
   'Metaphors attributing agency to nature': '#9F5103',
+  'agency to nature': '#9F5103',
   'Future/Utility': '#FF007F',
   'Future, Utility': '#FF007F',
   'Future-Utility': '#FF007F',
@@ -67,7 +74,12 @@ export const COLORS = {
   'Writing aim, direction': '#808080',
   'Writing direction': '#808080',
   'Blank statement': '#FFFFFF',
+  Blank: '#FFFFFF',
 };
+export const COLORS = Object.entries(PRE_COLORS).reduce((acc, [key, color]) => {
+  acc[key.toLowerCase()] = color;
+  return acc;
+}, {});
 
 export const COLORS_FOR_LEGEND = [
   {

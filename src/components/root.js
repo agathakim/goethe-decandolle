@@ -18,9 +18,7 @@ export default class RootComponent extends React.Component {
           <div className="flex center full-height">
             <ColorLegend />
           </div>
-          {
-            // <ColumnVisualizations defaultSelection={files[1].filePrefix} />
-          }
+          {<ColumnVisualizations defaultSelection={files[1].filePrefix} />}
         </div>
       </div>
     );

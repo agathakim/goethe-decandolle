@@ -1,7 +1,7 @@
 import React from 'react';
 import Sunburst from './sunburst';
 import WaffleBook from './waffle-book';
-import Graph from './graph';
+import Graph from './graph-2';
 
 import Picker from './file-picker';
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
@@ -10,7 +10,6 @@ import {getFile, prepSunburst, prepWaffleData} from '../utils';
 export default class Column extends React.Component {
   constructor(props) {
     super();
-    console.log(props);
     this.state = {
       hoveredComment: null,
       selectedFile: props.defaultSelection || files[0].filePrefix,
@@ -44,6 +43,33 @@ export default class Column extends React.Component {
             (acc, row) => acc.concat(row),
             [],
           );
+          console.log(waffleBookData);
+          const graphLinks = Object.values(
+            Object.entries(
+              graphNodes.reduce((acc, row) => {
+                row.colors.forEach(color => {
+                  acc[color] = (acc[color] || []).concat(row.sentenceIdx);
+                });
+                return acc;
+              }, {}),
+            )
+              .reduce((acc, [color, colorGroup]) => {
+                for (let i = 0; i < colorGroup.length; i++) {
+                  for (let j = i; j < colorGroup.length; j++) {
+                    acc.push({
+                      source: colorGroup[i],
+                      target: colorGroup[j],
+                      color,
+                    });
+                  }
+                }
+                return acc;
+              }, [])
+              .reduce((acc, {source, target, color}) => {
+                acc[`${source}-${target}-${color}`] = {source, target, color};
+                return acc;
+              }, {}),
+          );
           this.setState({
             data: sentenceClassifcations,
             numberedSents,
@@ -51,25 +77,7 @@ export default class Column extends React.Component {
             waffleBookData,
             loading: false,
             graphNodes,
-            graphLinks: Object.entries(
-              graphNodes.reduce((acc, row) => {
-                row.colors.forEach(color => {
-                  acc[color] = (acc[color] || []).concat(row.sentenceIdx);
-                });
-                return acc;
-              }, {}),
-            ).reduce((acc, [color, colorGroup]) => {
-              for (let i = 0; i < colorGroup.length; i++) {
-                for (let j = i; j < colorGroup.length; j++) {
-                  acc.push({
-                    source: colorGroup[i],
-                    target: colorGroup[j],
-                    color,
-                  });
-                }
-              }
-              return acc;
-            }, []),
+            graphLinks,
           });
         },
       );
@@ -104,14 +112,11 @@ export default class Column extends React.Component {
     const {
       hoveredComment,
       sunburstData,
-      waffleBookData,
       loading,
       selectedFile,
-      lockedWaffle,
       graphNodes,
       graphLinks,
     } = this.state;
-    console.log(graphLinks);
     if (loading) {
       return (
         <div
