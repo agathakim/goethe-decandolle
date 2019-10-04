@@ -33,6 +33,9 @@
   },
   "dependencies": {
     "d3-fetch": "^1.1.2",
+    "d3-force": "^2.0.1",
+    "d3-selection": "^1.4.0",
+    "d3-transition": "^1.2.0",
     "immutable": "^3.8.2",
     "lodash.debounce": "^4.0.8",
     "react": "16",

@@ -39,12 +39,37 @@ export default class Column extends React.Component {
     }).then(() => {
       return getFile(selectedFile).then(
         ({sentenceClassifcations, numberedSents}) => {
+          const waffleBookData = prepWaffleData(sentenceClassifcations);
+          const graphNodes = waffleBookData.reduce(
+            (acc, row) => acc.concat(row),
+            [],
+          );
           this.setState({
             data: sentenceClassifcations,
             numberedSents,
             sunburstData: prepSunburst(sentenceClassifcations),
-            waffleBookData: prepWaffleData(sentenceClassifcations),
+            waffleBookData,
             loading: false,
+            graphNodes,
+            graphLinks: Object.entries(
+              graphNodes.reduce((acc, row) => {
+                row.colors.forEach(color => {
+                  acc[color] = (acc[color] || []).concat(row.sentenceIdx);
+                });
+                return acc;
+              }, {}),
+            ).reduce((acc, [color, colorGroup]) => {
+              for (let i = 0; i < colorGroup.length; i++) {
+                for (let j = i; j < colorGroup.length; j++) {
+                  acc.push({
+                    source: colorGroup[i],
+                    target: colorGroup[j],
+                    color,
+                  });
+                }
+              }
+              return acc;
+            }, []),
           });
         },
       );
@@ -83,7 +108,10 @@ export default class Column extends React.Component {
       loading,
       selectedFile,
       lockedWaffle,
+      graphNodes,
+      graphLinks,
     } = this.state;
+    console.log(graphLinks);
     if (loading) {
       return (
         <div
@@ -114,16 +142,22 @@ export default class Column extends React.Component {
         </div>
         <div className="flex-down">
           <div className="flex-down">
-            <WaffleBook
-              toggleLock={() => this.setState({lockedWaffle: !lockedWaffle})}
-              lockedWaffle={lockedWaffle}
-              hoveredComment={hoveredComment}
-              setHoveredComment={this.setHoveredComment}
-              data={waffleBookData}
-            />
+            {
+              // <WaffleBook
+              // toggleLock={() => this.setState({lockedWaffle: !lockedWaffle})}
+              // lockedWaffle={lockedWaffle}
+              // hoveredComment={hoveredComment}
+              // setHoveredComment={this.setHoveredComment}
+              // data={waffleBookData}
+              // />
+            }
           </div>
           <div>
-            <Graph data={waffleBookData} />
+            <Graph
+              nodes={graphNodes}
+              links={graphLinks}
+              prefix={selectedFile}
+            />
           </div>
           <div className="flex-down">
             {<Sunburst hoveredComment={hoveredComment} data={sunburstData} />}
