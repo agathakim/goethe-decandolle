@@ -1,19 +1,51 @@
 import React from 'react';
-import Sunburst from './sunburst';
-import WaffleBook from './waffle-book';
-
+import BarChart from './barchart';
+import Graph from './graph';
 import Picker from './file-picker';
+
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
-import {getFile, prepSunburst, prepWaffleData} from '../utils';
+import {getFile, prepBarChart, prepWaffleData} from '../utils';
+
+function generateGraphLinks(graphNodes) {
+  const colorGroups = Object.entries(
+    graphNodes.reduce((acc, row) => {
+      row.colors.forEach(color => {
+        acc[color] = (acc[color] || []).concat(row.sentenceIdx);
+      });
+      return acc;
+    }, {}),
+  );
+
+  const dedupledLinks = colorGroups
+    .reduce((acc, [color, colorGroup]) => {
+      for (let i = 0; i < colorGroup.length; i++) {
+        for (let j = i; j < colorGroup.length; j++) {
+          if (i !== j) {
+            acc.push({
+              source: colorGroup[i],
+              target: colorGroup[j],
+              color,
+            });
+          }
+        }
+      }
+      return acc;
+    }, [])
+    .reduce((acc, {source, target, color}) => {
+      acc[`${source}-${target}-${color}`] = {source, target, color};
+      return acc;
+    }, {});
+
+  return Object.values(dedupledLinks);
+}
 
 export default class Column extends React.Component {
   constructor(props) {
     super();
-    console.log(props);
     this.state = {
       hoveredComment: null,
       selectedFile: props.defaultSelection || files[0].filePrefix,
-      sunburstData: null,
+      barChartData: null,
       waffleBookData: null,
       loading: true,
       lockedWaffle: false,
@@ -23,14 +55,20 @@ export default class Column extends React.Component {
     this.updateData = this.updateData.bind(this);
   }
   componentDidMount() {
-    this.updateData(this.state.selectedFile);
+    this.updateData(this.state.selectedFile, this.props.validColors);
+  }
+
+  componentDidUpdate(oldProps) {
+    if (oldProps.calcIdx !== this.props.calcIdx) {
+      this.updateData(this.state.selectedFile, this.props.validColors);
+    }
   }
 
   setAsyncState(newState) {
     return new Promise(resolve => this.setState(newState, () => resolve()));
   }
 
-  updateData(selectedFile) {
+  updateData(selectedFile, validColors) {
     // defaults to loading goethe
     this.setAsyncState({
       loading: true,
@@ -38,12 +76,21 @@ export default class Column extends React.Component {
     }).then(() => {
       return getFile(selectedFile).then(
         ({sentenceClassifcations, numberedSents}) => {
+          const waffleBookData = prepWaffleData(sentenceClassifcations);
+          const graphNodes = waffleBookData
+            .reduce((acc, row) => acc.concat(row), [])
+            .filter(d => {
+              return d.colors.every(color => validColors[color]);
+            });
+
           this.setState({
             data: sentenceClassifcations,
             numberedSents,
-            sunburstData: prepSunburst(sentenceClassifcations),
-            waffleBookData: prepWaffleData(sentenceClassifcations),
+            barChartData: prepBarChart(sentenceClassifcations, validColors),
+            waffleBookData,
             loading: false,
+            graphNodes,
+            graphLinks: generateGraphLinks(graphNodes),
           });
         },
       );
@@ -75,13 +122,14 @@ export default class Column extends React.Component {
     });
   }
   render() {
+    const {showConnections} = this.props;
     const {
       hoveredComment,
-      sunburstData,
-      waffleBookData,
+      barChartData,
       loading,
       selectedFile,
-      lockedWaffle,
+      graphNodes,
+      graphLinks,
     } = this.state;
     if (loading) {
       return (
@@ -104,7 +152,9 @@ export default class Column extends React.Component {
         className="flex-down"
       >
         <Picker
-          onSelect={newPrefix => this.updateData(newPrefix)}
+          onSelect={newPrefix =>
+            this.updateData(newPrefix, this.props.validColors)
+          }
           selectedFile={selectedFile}
         />
         <div className="flex-down descriptions">
@@ -112,25 +162,14 @@ export default class Column extends React.Component {
           <p>{DESCRIPTIONS[selectedFile].description}</p>
         </div>
         <div className="flex-down">
-          <div className="flex-down">
-            <WaffleBook
-              toggleLock={() => this.setState({lockedWaffle: !lockedWaffle})}
-              lockedWaffle={lockedWaffle}
-              hoveredComment={hoveredComment}
-              setHoveredComment={this.setHoveredComment}
-              data={waffleBookData}
-            />
-          </div>
-          <div className="flex-down">
-            {<Sunburst hoveredComment={hoveredComment} data={sunburstData} />}
-            <div className="sentence-box">
-              <div>
-                {hoveredComment
-                  ? hoveredComment.sentence
-                  : 'hover over grid to the right to select a sentence'}
-              </div>
-            </div>
-          </div>
+          <Graph
+            showConnections={showConnections}
+            nodes={graphNodes}
+            links={graphLinks}
+            prefix={selectedFile}
+            getSentence={idx => this.state.numberedSents[idx]}
+          />
+          {<BarChart data={barChartData} />}
         </div>
       </div>
     );

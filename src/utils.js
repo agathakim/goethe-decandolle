@@ -33,6 +33,24 @@ export const getFile = filePrefix =>
     };
   });
 
+export function prepBarChart(data, validColors) {
+  const counts = data.reduce((acc, row) => {
+    Object.keys(row).forEach(key => {
+      acc[key] = (acc[key] || 0) + row[key];
+    });
+    return acc;
+  });
+  delete counts.index;
+  return Object.entries(counts).map(([cat, count]) => {
+    const color = COLORS[cat.toLowerCase()];
+    return {
+      cat,
+      count: validColors[color] ? count : 0,
+      color,
+    };
+  });
+}
+
 export function prepSunburst(data) {
   const countsByCat = data.reduce((acc, row) => {
     categoryRelationships.forEach(({cat}) => {
@@ -61,7 +79,7 @@ export function prepSunburst(data) {
             ...child,
             children: [],
             label: child.cat,
-            color: COLORS[child.cat],
+            color: COLORS[child.cat.toLowerCase()],
           };
         }),
       };
@@ -73,7 +91,12 @@ export function prepWaffleData(data) {
   const blocks = data.map(row => {
     return Object.entries(row)
       .filter(([key, count]) => Number(count) && key !== 'index')
-      .map(([key, count]) => COLORS[key]);
+      .map(([key, count]) => {
+        if (!COLORS[key.toLowerCase()]) {
+          console.log(key.toLowerCase(), COLORS[key.toLowerCase()]);
+        }
+        return COLORS[key.toLowerCase()];
+      });
   });
   // greedy algorithm
 
