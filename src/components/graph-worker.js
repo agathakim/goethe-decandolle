@@ -1,3 +1,5 @@
+import TSNE from 'tsne-js';
+
 import {
   forceSimulation,
   forceManyBody,
@@ -6,17 +8,20 @@ import {
   forceLink,
 } from 'd3-force';
 import {scaleLinear} from 'd3-scale';
-import {WAFFLE_WIDTH, WAFFLE_HEIGHT, CHART_MARGIN} from '../constants';
+import {
+  WAFFLE_WIDTH,
+  WAFFLE_HEIGHT,
+  CHART_MARGIN,
+  COLORS_FOR_LEGEND,
+} from '../constants';
 import {computeDomain} from '../utils';
 
-addEventListener('message', event => {
-  const {
-    data: {nodes, links},
-  } = event;
-
-  // some what improve the quality of the seperated clusters
+/**
+ * Hueristic technique for seperating the clusters
+ */
+function applyHueristicPreposition(nodes) {
   let ticker = 0;
-  const colorOrder = event.data.nodes.reduce((acc, node) => {
+  const colorOrder = nodes.reduce((acc, node) => {
     const key = JSON.stringify(node.colors);
     if (acc[key]) {
       return acc;
@@ -32,23 +37,69 @@ addEventListener('message', event => {
     node.x = (WAFFLE_WIDTH / 2) * Math.cos(angle);
     node.y = (WAFFLE_WIDTH / 2) * Math.sin(angle);
   });
+}
+
+/**
+ * Numerical seperation technique
+ */
+function prepositionNodesWithTSNE(nodes) {
+  nodes.forEach(node => {
+    const presentColors = node.colors.reduce((acc, row) => {
+      acc[row] = true;
+      return acc;
+    }, {});
+
+    node.featureVector = COLORS_FOR_LEGEND.map(({color}) => {
+      return presentColors[color] ? 1 : 0;
+    });
+  });
+  const model = new TSNE({
+    dim: 2,
+    perplexity: 5.0,
+    earlyExaggeration: 4.0,
+    learningRate: 100.0,
+    nIter: 2000,
+    metric: 'jaccard',
+  });
+  model.init({
+    data: nodes.map(({featureVector}) => featureVector),
+    type: 'dense',
+  });
+
+  const xScale = scaleLinear()
+    .domain([-1, 1])
+    .range([CHART_MARGIN.left, WAFFLE_WIDTH - CHART_MARGIN.right]);
+  const yScale = scaleLinear()
+    .domain([-1, 1])
+    .range([CHART_MARGIN.top, WAFFLE_HEIGHT - CHART_MARGIN.bottom]);
+  const output = model
+    .getOutputScaled()
+    .map(([x, y]) => [xScale(x), yScale(y)]);
+  nodes.forEach((node, idx) => {
+    node.x = output[idx][0];
+    node.y = output[idx][1];
+  });
+}
+
+addEventListener('message', event => {
+  const {
+    data: {nodes, links},
+  } = event;
+
+  prepositionNodesWithTSNE(nodes);
 
   // prepare simulation
+  const linkForce = forceLink()
+    .distance(8)
+    .links(links)
+    .id(d => d.sentenceIdx);
+  const collideForce = forceCollide()
+    .radius(d => 8)
+    .iterations(2);
   const simulation = forceSimulation(nodes)
-    .force(
-      'link',
-      forceLink()
-        .distance(8)
-        .links(links)
-        .id(d => d.sentenceIdx),
-    )
+    .force('link', linkForce)
     .force('center', forceCenter(WAFFLE_WIDTH / 2, WAFFLE_HEIGHT / 2))
-    .force(
-      'collide',
-      forceCollide()
-        .radius(d => 8)
-        .iterations(2),
-    )
+    .force('collide', collideForce)
     .force('charge', forceManyBody().strength(-40))
     .stop();
 
