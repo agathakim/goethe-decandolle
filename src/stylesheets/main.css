@@ -16,8 +16,8 @@ body,
 
 #goethe-application {
   padding: 10px 90px;
-  height: calc(100% - 20px);
-  width: calc(100% - 180px);
+  /* height: calc(100% - 20px);
+  width: calc(100% - 180px); */
 }
 
 h1 {

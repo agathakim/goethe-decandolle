@@ -162,6 +162,7 @@ export default class Column extends React.Component {
             nodes={graphNodes}
             links={graphLinks}
             prefix={selectedFile}
+            barChartData={barChartData}
             getSentence={idx => this.state.numberedSents[idx]}
           />
           {

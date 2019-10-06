@@ -1,7 +1,12 @@
 import React from 'react';
 import {scaleLinear} from 'd3-scale';
 
-import {WAFFLE_WIDTH, WAFFLE_HEIGHT, CHART_MARGIN} from '../constants';
+import {
+  WAFFLE_WIDTH,
+  WAFFLE_HEIGHT,
+  CHART_MARGIN,
+  COLORS_FOR_LEGEND,
+} from '../constants';
 import {computeDomain, classnames} from '../utils';
 
 function renderInnerCircles(node) {
@@ -69,6 +74,7 @@ export default class Graph extends React.Component {
   constructor() {
     super();
     this.state = {
+      selectedColor: null,
       progress: 0,
       links: [],
       nodes: [],
@@ -114,9 +120,15 @@ export default class Graph extends React.Component {
       nodes,
       hoveredComment,
       clickedComment,
+      selectedColor,
       domain: {minX, maxX, minY, maxY},
     } = this.state;
-    const {getSentence, showConnections, cooccuranceData} = this.props;
+    const {
+      getSentence,
+      showConnections,
+      cooccuranceData,
+      barChartData,
+    } = this.props;
 
     const xScale = scaleLinear()
       .domain([minX, maxX])
@@ -127,6 +139,7 @@ export default class Graph extends React.Component {
     const progessScale = scaleLinear()
       .domain([0, 1])
       .range([0, WAFFLE_WIDTH]);
+
     return (
       <div style={{position: 'relative'}}>
         {this.props.nodes.length === 0 && (
@@ -138,12 +151,14 @@ export default class Graph extends React.Component {
           </div>
         )}
         <svg
-          onMouseLeave={() => this.setState({clickedComment: false})}
+          onMouseLeave={() =>
+            this.setState({clickedComment: false, selectedColor: null})
+          }
           width={WAFFLE_WIDTH}
           height={WAFFLE_HEIGHT}
           className="node-graph"
         >
-          {clickedComment && (
+          {(clickedComment || selectedColor) && (
             <rect
               width={WAFFLE_WIDTH}
               height={WAFFLE_HEIGHT}
@@ -170,8 +185,10 @@ export default class Graph extends React.Component {
                   className={classnames({
                     displayNode: true,
                     opaqueDisplayNode:
-                      clickedComment &&
-                      !equalColorSets(node.colors, clickedComment.colors),
+                      (clickedComment &&
+                        !equalColorSets(node.colors, clickedComment.colors)) ||
+                      (selectedColor &&
+                        node.colors.every(color => color !== selectedColor)),
                   })}
                   key={`node-${node.sentenceIdx}`}
                   transform={`translate(${xScale(node.x)}, ${yScale(node.y)})`}
@@ -221,7 +238,7 @@ export default class Graph extends React.Component {
           className={classnames({
             'link-graph': true,
             hide: !showConnections,
-            mute: clickedComment,
+            mute: clickedComment || selectedColor,
           })}
         />
         <span className="small-font">
@@ -230,6 +247,43 @@ export default class Graph extends React.Component {
             ? 'Click anywhere to unselect the highlighted tag type'
             : 'Click to Highlight a Particular Tag Set'}
         </span>
+        <h5>Select single color classes</h5>
+        <div
+          className="flex"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+          }}
+        >
+          {barChartData.map(({color, tag, count}) => {
+            return (
+              <button
+                key={`${color}-${tag}-select`}
+                onClick={() => {
+                  this.setState({selectedColor: color});
+                }}
+                className="flex"
+                style={{cursor: 'pointer', marginRight: '8px'}}
+              >
+                <span
+                  style={{
+                    height: '10px',
+                    width: '10px',
+                    backgroundColor: color,
+                  }}
+                />
+                <span className="small-font">
+                  {tag}: {count}
+                </span>
+              </button>
+            );
+          })}
+          {selectedColor && (
+            <button onClick={() => this.setState({selectedColor: null})}>
+              DESELECT
+            </button>
+          )}
+        </div>
       </div>
     );
   }

@@ -55,16 +55,18 @@ function prepositionNodesWithTSNE(nodes) {
   });
   const model = new TSNE({
     dim: 2,
-    perplexity: 5.0,
+    perplexity: 50.0,
     earlyExaggeration: 4.0,
-    learningRate: 100.0,
-    nIter: 2000,
-    metric: 'jaccard',
+    learningRate: 500.0,
+    nIter: 200,
+    metric: 'dice',
   });
   model.init({
     data: nodes.map(({featureVector}) => featureVector),
     type: 'dense',
   });
+  const [error, iter] = model.run();
+  console.log(error, iter);
 
   const xScale = scaleLinear()
     .domain([-1, 1])
@@ -81,14 +83,7 @@ function prepositionNodesWithTSNE(nodes) {
   });
 }
 
-addEventListener('message', event => {
-  const {
-    data: {nodes, links},
-  } = event;
-
-  prepositionNodesWithTSNE(nodes);
-
-  // prepare simulation
+function prepareSimulation(nodes, links) {
   const linkForce = forceLink()
     .distance(8)
     .links(links)
@@ -96,14 +91,15 @@ addEventListener('message', event => {
   const collideForce = forceCollide()
     .radius(d => 8)
     .iterations(2);
-  const simulation = forceSimulation(nodes)
+  return forceSimulation(nodes)
     .force('link', linkForce)
     .force('center', forceCenter(WAFFLE_WIDTH / 2, WAFFLE_HEIGHT / 2))
     .force('collide', collideForce)
     .force('charge', forceManyBody().strength(-40))
     .stop();
+}
 
-  // execute simulation
+function executeSimulation(simulation) {
   const numSteps = Math.ceil(
     Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay()),
   );
@@ -112,6 +108,19 @@ addEventListener('message', event => {
     postMessage({type: 'tick', progress: i / n});
     simulation.tick();
   }
+}
+
+addEventListener('message', event => {
+  const {
+    data: {nodes, links},
+  } = event;
+
+  applyHueristicPreposition(nodes);
+  // prepositionNodesWithTSNE(nodes);
+
+  const simulation = prepareSimulation(nodes, links);
+  executeSimulation(simulation);
+
   // send results back
   postMessage({type: 'end', nodes});
 

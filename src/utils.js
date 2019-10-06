@@ -1,4 +1,9 @@
-import {COLORS, categoryRelationships, TARGET_WIDTH} from './constants';
+import {
+  COLORS,
+  categoryRelationships,
+  TARGET_WIDTH,
+  COLORS_FOR_LEGEND,
+} from './constants';
 import {csv} from 'd3-fetch';
 
 export function classnames(classObject) {
@@ -66,9 +71,14 @@ export function prepBarChart(data, validColors, useInclusive) {
     }, {});
   delete counts.index;
   delete counts.colors;
+  const colorToTag = COLORS_FOR_LEGEND.reduce((acc, row) => {
+    acc[row.color] = row.tag;
+    return acc;
+  }, {});
   return Object.entries(counts).map(([cat, count]) => {
     return {
       cat,
+      tag: colorToTag[COLORS[cat.toLowerCase()]],
       count: count || 0,
       color: COLORS[cat.toLowerCase()],
     };
