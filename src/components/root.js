@@ -25,14 +25,17 @@ export default class RootComponent extends React.Component {
       }, {});
       this.setState({validColors: newColors});
     };
+    const columnVisProps = {
+      showConnections,
+      calcIdx,
+      validColors,
+    };
     return (
       <div>
         <div className="flex">
           <ColumnVisualizations
             defaultSelection={files[3].filePrefix}
-            showConnections={showConnections}
-            calcIdx={calcIdx}
-            validColors={validColors}
+            {...columnVisProps}
           />
           <div className="flex center full-height">
             <ColorLegend
@@ -55,9 +58,7 @@ export default class RootComponent extends React.Component {
           {
             // <ColumnVisualizations
             //   defaultSelection={files[0].filePrefix}
-            //   showConnections={showConnections}
-            //   calcIdx={calcIdx}
-            //   validColors={validColors}
+            //   {...columnVisProps}
             // />
           }
         </div>

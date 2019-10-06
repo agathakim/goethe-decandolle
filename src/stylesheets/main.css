@@ -112,6 +112,10 @@ h1 {
   font-size: 18px;
 }
 
+.legend input {
+  font-size: 20px;
+}
+
 .node-graph {
   z-index: 1;
   position: absolute;
@@ -123,15 +127,20 @@ h1 {
   transition: opacity 1s;
 }
 
+.link-graph.mute {
+  opacity: 0.1;
+}
+
 .link-graph.hide {
   opacity: 0;
 }
 
 .displayNode {
+  cursor: pointer;
   opacity: 1;
   transition: opacity 0.2s;
 }
 
 .displayNode.opaqueDisplayNode {
-  opacity: 0.3;
+  opacity: 0.1;
 }

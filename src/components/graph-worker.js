@@ -10,13 +10,35 @@ import {WAFFLE_WIDTH, WAFFLE_HEIGHT, CHART_MARGIN} from '../constants';
 import {computeDomain} from '../utils';
 
 addEventListener('message', event => {
-  const nodes = event.data.nodes;
-  const links = event.data.links;
+  const {
+    data: {nodes, links},
+  } = event;
+
+  // some what improve the quality of the seperated clusters
+  let ticker = 0;
+  const colorOrder = event.data.nodes.reduce((acc, node) => {
+    const key = JSON.stringify(node.colors);
+    if (acc[key]) {
+      return acc;
+    }
+    acc[key] = ticker;
+    ticker += 1;
+    return acc;
+  }, {});
+
+  nodes.forEach(node => {
+    const key = JSON.stringify(node.colors);
+    const angle = ((Math.PI * colorOrder[key]) / ticker) * 2;
+    node.x = (WAFFLE_WIDTH / 2) * Math.cos(angle);
+    node.y = (WAFFLE_WIDTH / 2) * Math.sin(angle);
+  });
+
+  // prepare simulation
   const simulation = forceSimulation(nodes)
     .force(
       'link',
       forceLink()
-        .distance(10)
+        .distance(8)
         .links(links)
         .id(d => d.sentenceIdx),
     )
@@ -27,9 +49,10 @@ addEventListener('message', event => {
         .radius(d => 8)
         .iterations(2),
     )
-    .force('charge', forceManyBody().strength(-30))
+    .force('charge', forceManyBody().strength(-40))
     .stop();
 
+  // execute simulation
   const numSteps = Math.ceil(
     Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay()),
   );
@@ -38,9 +61,10 @@ addEventListener('message', event => {
     postMessage({type: 'tick', progress: i / n});
     simulation.tick();
   }
+  // send results back
+  postMessage({type: 'end', nodes});
 
-  postMessage({type: 'end', nodes, links});
-
+  // use off screen drawing to add the lines
   const {minX, maxX, minY, maxY} = computeDomain(nodes);
   const xScale = scaleLinear()
     .domain([minX, maxX])

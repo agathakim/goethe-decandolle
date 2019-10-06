@@ -34,12 +34,14 @@ export default class ColorLegend extends React.Component {
                   <b>{tag}</b>:<i>{label}</i>
                 </div>
                 <div className="flex">
-                  <div className="medium-font">Showing</div>
-                  <input
-                    onChange={() => toggleColor(color)}
-                    type="checkbox"
-                    checked={validColors[color]}
-                  />
+                  <label className="container">
+                    <input
+                      onChange={() => toggleColor(color)}
+                      type="checkbox"
+                      checked={validColors[color]}
+                    />
+                    <span className="checkmark">Showing</span>
+                  </label>
                 </div>
               </div>
             </div>

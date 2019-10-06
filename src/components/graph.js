@@ -73,6 +73,8 @@ export default class Graph extends React.Component {
       links: [],
       nodes: [],
       hoveredComment: null,
+      clickedComment: null,
+      domain: {minX: 0, maxX: 0, minY: 0, maxY: 0},
     };
   }
   componentDidMount() {
@@ -86,8 +88,8 @@ export default class Graph extends React.Component {
         case 'end':
           this.setState({
             progress: 1,
-            links: event.data.links,
             nodes: event.data.nodes,
+            domain: computeDomain(event.data.nodes),
           });
           return;
       }
@@ -107,10 +109,14 @@ export default class Graph extends React.Component {
   }
 
   render() {
-    const {progress, nodes, hoveredComment} = this.state;
+    const {
+      progress,
+      nodes,
+      hoveredComment,
+      clickedComment,
+      domain: {minX, maxX, minY, maxY},
+    } = this.state;
     const {getSentence, showConnections, cooccuranceData} = this.props;
-
-    const {minX, maxX, minY, maxY} = computeDomain(nodes);
 
     const xScale = scaleLinear()
       .domain([minX, maxX])
@@ -131,7 +137,23 @@ export default class Graph extends React.Component {
             </h5>
           </div>
         )}
-        <svg width={WAFFLE_WIDTH} height={WAFFLE_HEIGHT} className="node-graph">
+        <svg
+          onMouseLeave={() => this.setState({clickedComment: false})}
+          width={WAFFLE_WIDTH}
+          height={WAFFLE_HEIGHT}
+          className="node-graph"
+        >
+          {clickedComment && (
+            <rect
+              width={WAFFLE_WIDTH}
+              height={WAFFLE_HEIGHT}
+              fill="red"
+              opacity="0"
+              onClick={() => {
+                this.setState({clickedComment: null});
+              }}
+            />
+          )}
           <g transform={`translate(${CHART_MARGIN.left}, ${CHART_MARGIN.top})`}>
             {progress < 1 && (
               <rect
@@ -145,6 +167,12 @@ export default class Graph extends React.Component {
             {nodes.map(node => {
               return (
                 <g
+                  className={classnames({
+                    displayNode: true,
+                    opaqueDisplayNode:
+                      clickedComment &&
+                      !equalColorSets(node.colors, clickedComment.colors),
+                  })}
                   key={`node-${node.sentenceIdx}`}
                   transform={`translate(${xScale(node.x)}, ${yScale(node.y)})`}
                 >
@@ -155,6 +183,9 @@ export default class Graph extends React.Component {
             {nodes.map(node => {
               return (
                 <circle
+                  className={classnames({
+                    displayNode: true,
+                  })}
                   onMouseEnter={e => {
                     this.setState({
                       hoveredComment: {
@@ -164,11 +195,15 @@ export default class Graph extends React.Component {
                       },
                     });
                   }}
+                  onClick={e => {
+                    this.setState({clickedComment: node});
+                  }}
                   onMouseLeave={() => this.setState({hoveredComment: null})}
                   key={`node-${node.sentenceIdx}`}
                   fill="red"
                   fillOpacity="0"
                   stroke="black"
+                  strokeOpacity="0.3"
                   cx={xScale(node.x)}
                   cy={yScale(node.y)}
                   r="10"
@@ -183,9 +218,18 @@ export default class Graph extends React.Component {
           width={WAFFLE_WIDTH}
           height={WAFFLE_HEIGHT}
           ref="canvas"
-          className={showConnections ? 'link-graph' : 'link-graph hide'}
+          className={classnames({
+            'link-graph': true,
+            hide: !showConnections,
+            mute: clickedComment,
+          })}
         />
-        <span className="small-font">Hover to view sentences</span>
+        <span className="small-font">
+          Hover to view sentences,{' '}
+          {clickedComment
+            ? 'Click anywhere to unselect the highlighted tag type'
+            : 'Click to Highlight a Particular Tag Set'}
+        </span>
       </div>
     );
   }

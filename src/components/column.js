@@ -2,7 +2,7 @@ import React from 'react';
 import BarChart from './barchart';
 import Graph from './graph';
 import Picker from './file-picker';
-import RelativeCounts from './relative-counts';
+// import RelativeCounts from './relative-counts';
 
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
 import {getFile, prepBarChart, prepWaffleData, colorSentences} from '../utils';
@@ -86,7 +86,6 @@ export default class Column extends React.Component {
         ({sentenceClassifcations, numberedSents}) => {
           const waffleBookData = prepWaffleData(sentenceClassifcations);
           const graphNodes = generateNodes(waffleBookData, validColors);
-          console.log(graphNodes);
           const data = colorSentences(sentenceClassifcations);
           this.setState({
             data,
