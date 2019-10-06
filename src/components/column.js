@@ -7,12 +7,15 @@ import Picker from './file-picker';
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
 import {getFile, prepBarChart, prepWaffleData, colorSentences} from '../utils';
 
-function generateNodes(waffleBookData, validColors) {
+function generateNodes(waffleBookData, validColors, useInclusive) {
   return waffleBookData
     .reduce((acc, row) => acc.concat(row), [])
     .filter(d => {
       // i think this should be every, but i think agatha expects some. shruggie.
-      return d.colors.some(color => validColors[color]);
+      if (useInclusive) {
+        return d.colors.some(color => validColors[color]);
+      }
+      return d.colors.every(color => validColors[color]);
     });
 }
 
@@ -63,12 +66,14 @@ export default class Column extends React.Component {
     this.updateData = this.updateData.bind(this);
   }
   componentDidMount() {
-    this.updateData(this.state.selectedFile, this.props.validColors);
+    const {validColors, useInclusive} = this.props;
+    this.updateData(this.state.selectedFile, validColors, useInclusive);
   }
 
   componentDidUpdate(oldProps) {
     if (oldProps.calcIdx !== this.props.calcIdx) {
-      this.updateData(this.state.selectedFile, this.props.validColors);
+      const {validColors, useInclusive} = this.props;
+      this.updateData(this.state.selectedFile, validColors, useInclusive);
     }
   }
 
@@ -76,7 +81,7 @@ export default class Column extends React.Component {
     return new Promise(resolve => this.setState(newState, () => resolve()));
   }
 
-  updateData(selectedFile, validColors) {
+  updateData(selectedFile, validColors, useInclusive) {
     // defaults to loading goethe
     this.setAsyncState({
       loading: true,
@@ -85,12 +90,16 @@ export default class Column extends React.Component {
       return getFile(selectedFile).then(
         ({sentenceClassifcations, numberedSents}) => {
           const waffleBookData = prepWaffleData(sentenceClassifcations);
-          const graphNodes = generateNodes(waffleBookData, validColors);
+          const graphNodes = generateNodes(
+            waffleBookData,
+            validColors,
+            useInclusive,
+          );
           const data = colorSentences(sentenceClassifcations);
           this.setState({
             data,
             numberedSents,
-            barChartData: prepBarChart(data, validColors),
+            barChartData: prepBarChart(data, validColors, useInclusive),
             waffleBookData,
             loading: false,
             graphNodes,

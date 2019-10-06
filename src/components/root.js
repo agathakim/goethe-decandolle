@@ -13,11 +13,12 @@ export default class RootComponent extends React.Component {
         return acc;
       }, {}),
       calcIdx: 0,
+      useInclusive: true,
     };
   }
 
   render() {
-    const {showConnections, validColors, calcIdx} = this.state;
+    const {showConnections, validColors, calcIdx, useInclusive} = this.state;
     const changeAllSelection = setTo => () => {
       const newColors = Object.keys(validColors).reduce((acc, row) => {
         acc[row] = setTo;
@@ -29,6 +30,7 @@ export default class RootComponent extends React.Component {
       showConnections,
       calcIdx,
       validColors,
+      useInclusive,
     };
     return (
       <div>
@@ -39,7 +41,12 @@ export default class RootComponent extends React.Component {
           />
           <div className="flex center full-height">
             <ColorLegend
+              toggleInclusiveExclusive={() => {
+                this.setState({useInclusive: !useInclusive});
+              }}
+              useInclusive={useInclusive}
               validColors={validColors}
+              showConnections={showConnections}
               toggleColor={color => {
                 const newColors = {...validColors};
                 newColors[color] = !newColors[color];
@@ -56,10 +63,10 @@ export default class RootComponent extends React.Component {
             />
           </div>
           {
-            // <ColumnVisualizations
-            //   defaultSelection={files[0].filePrefix}
-            //   {...columnVisProps}
-            // />
+            <ColumnVisualizations
+              defaultSelection={files[0].filePrefix}
+              {...columnVisProps}
+            />
           }
         </div>
       </div>

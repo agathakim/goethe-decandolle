@@ -144,3 +144,8 @@ h1 {
 .displayNode.opaqueDisplayNode {
   opacity: 0.1;
 }
+
+.switch-center {
+  display: flex;
+  align-items: center;
+}

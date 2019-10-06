@@ -50,18 +50,20 @@ export function colorSentences(data) {
   });
 }
 
-export function prepBarChart(data, validColors) {
+export function prepBarChart(data, validColors, useInclusive) {
   const counts = data
     .filter(d => {
-      // i think this should be every, but i think agatha expects some. shruggie.
-      return d.colors.some(color => validColors[color]);
+      if (useInclusive) {
+        return d.colors.some(color => validColors[color]);
+      }
+      return d.colors.every(color => validColors[color]);
     })
     .reduce((acc, row) => {
       Object.keys(row).forEach(key => {
         acc[key] = (acc[key] || 0) + row[key];
       });
       return acc;
-    });
+    }, {});
   delete counts.index;
   delete counts.colors;
   return Object.entries(counts).map(([cat, count]) => {
