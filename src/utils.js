@@ -1,6 +1,12 @@
 import {COLORS, categoryRelationships, TARGET_WIDTH} from './constants';
 import {csv} from 'd3-fetch';
 
+export function classnames(classObject) {
+  return Object.keys(classObject)
+    .filter(name => classObject[name])
+    .join(' ');
+}
+
 const csvWithMemoize = fileUrl => {
   const cache = {};
   if (cache[fileUrl]) {
@@ -32,6 +38,17 @@ export const getFile = filePrefix =>
       ),
     };
   });
+
+export function colorSentences(data) {
+  return data.map(row => {
+    const colors = Object.keys(row)
+      .filter(key => row[key] && key !== 'index')
+      .map(key => {
+        return COLORS[key.toLowerCase()];
+      });
+    return {...row, colors};
+  });
+}
 
 export function prepBarChart(data, validColors) {
   const counts = data.reduce((acc, row) => {

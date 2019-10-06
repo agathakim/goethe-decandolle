@@ -44,12 +44,12 @@ export default class RootComponent extends React.Component {
             />
           </div>
           {
-            <ColumnVisualizations
-              defaultSelection={files[0].filePrefix}
-              showConnections={showConnections}
-              calcIdx={calcIdx}
-              validColors={validColors}
-            />
+            // <ColumnVisualizations
+            //   defaultSelection={files[0].filePrefix}
+            //   showConnections={showConnections}
+            //   calcIdx={calcIdx}
+            //   validColors={validColors}
+            // />
           }
         </div>
       </div>

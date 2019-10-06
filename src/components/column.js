@@ -2,9 +2,10 @@ import React from 'react';
 import BarChart from './barchart';
 import Graph from './graph';
 import Picker from './file-picker';
+import RelativeCounts from './relative-counts';
 
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
-import {getFile, prepBarChart, prepWaffleData} from '../utils';
+import {getFile, prepBarChart, prepWaffleData, colorSentences} from '../utils';
 
 function generateNodes(waffleBookData, validColors) {
   return waffleBookData
@@ -84,15 +85,20 @@ export default class Column extends React.Component {
         ({sentenceClassifcations, numberedSents}) => {
           const waffleBookData = prepWaffleData(sentenceClassifcations);
           const graphNodes = generateNodes(waffleBookData, validColors);
-
+          const data = colorSentences(sentenceClassifcations);
           this.setState({
-            data: sentenceClassifcations,
+            data,
             numberedSents,
             barChartData: prepBarChart(sentenceClassifcations, validColors),
             waffleBookData,
             loading: false,
             graphNodes,
             graphLinks: generateGraphLinks(graphNodes),
+            cooccuranceData: data.reduce((acc, row) => {
+              const key = JSON.stringify(row.colors);
+              acc[key] = (acc[key] || 0) + 1;
+              return acc;
+            }, {}),
           });
         },
       );
@@ -103,6 +109,7 @@ export default class Column extends React.Component {
     const {showConnections} = this.props;
     const {
       barChartData,
+      cooccuranceData,
       loading,
       selectedFile,
       graphNodes,
@@ -140,13 +147,17 @@ export default class Column extends React.Component {
         </div>
         <div className="flex-down">
           <Graph
+            cooccuranceData={cooccuranceData}
             showConnections={showConnections}
             nodes={graphNodes}
             links={graphLinks}
             prefix={selectedFile}
             getSentence={idx => this.state.numberedSents[idx]}
           />
-          {<BarChart data={barChartData} />}
+          {
+            // <RelativeCounts data={data} />
+          }
+          <BarChart data={barChartData} />
         </div>
       </div>
     );

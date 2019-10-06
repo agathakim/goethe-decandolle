@@ -2,7 +2,7 @@ import React from 'react';
 import {scaleLinear} from 'd3-scale';
 
 import {WAFFLE_WIDTH, WAFFLE_HEIGHT, CHART_MARGIN} from '../constants';
-import {computeDomain} from '../utils';
+import {computeDomain, classnames} from '../utils';
 
 function renderInnerCircles(node) {
   /* eslint-disable react/display-name */
@@ -19,6 +19,50 @@ function renderInnerCircles(node) {
       />
     );
   };
+}
+
+function equalColorSets(arrA, arrB) {
+  if (arrA.length !== arrB.length) {
+    return false;
+  }
+  for (let idx = 0; idx < arrA.length; idx++) {
+    if (arrA[idx] !== arrB[idx]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function renderTooltip(hoveredComment, getSentence, cooccuranceData) {
+  const count = cooccuranceData[JSON.stringify(hoveredComment.node.colors)];
+  const similarMessage =
+    count === 1
+      ? '(Unique tag set)'
+      : `(${count} sentencess have this tag set)`;
+  return (
+    <div
+      className="tooltip"
+      style={{
+        top: hoveredComment.offsetY + 50,
+        left: hoveredComment.offsetX + 10,
+        zIndex: 2,
+      }}
+    >
+      <div className="flex">
+        {hoveredComment.node.colors.map(color => {
+          return (
+            <div
+              className="color-block"
+              key={`hover-${color}`}
+              style={{backgroundColor: color}}
+            />
+          );
+        })}
+        <span className="small-font">{similarMessage}</span>
+      </div>
+      {getSentence(hoveredComment.node.sentenceIdx)}
+    </div>
+  );
 }
 
 export default class Graph extends React.Component {
@@ -64,7 +108,7 @@ export default class Graph extends React.Component {
 
   render() {
     const {progress, nodes, hoveredComment} = this.state;
-    const {getSentence, showConnections} = this.props;
+    const {getSentence, showConnections, cooccuranceData} = this.props;
 
     const {minX, maxX, minY, maxY} = computeDomain(nodes);
 
@@ -77,7 +121,6 @@ export default class Graph extends React.Component {
     const progessScale = scaleLinear()
       .domain([0, 1])
       .range([0, WAFFLE_WIDTH]);
-
     return (
       <div style={{position: 'relative'}}>
         <svg width={WAFFLE_WIDTH} height={WAFFLE_HEIGHT} className="node-graph">
@@ -126,32 +169,8 @@ export default class Graph extends React.Component {
             })}
           </g>
         </svg>
-        {hoveredComment && (
-          <div
-            className="tooltip"
-            style={{
-              top: hoveredComment.offsetY + 50,
-              left: hoveredComment.offsetX + 10,
-              zIndex: 2,
-            }}
-          >
-            <div className="flex">
-              {hoveredComment.node.colors.map(color => {
-                return (
-                  <div
-                    key={`hover-${color}`}
-                    style={{
-                      height: '10px',
-                      width: '10px',
-                      backgroundColor: color,
-                    }}
-                  />
-                );
-              })}
-            </div>
-            {getSentence(hoveredComment.node.sentenceIdx)}
-          </div>
-        )}
+        {hoveredComment &&
+          renderTooltip(hoveredComment, getSentence, cooccuranceData)}
         <canvas
           width={WAFFLE_WIDTH}
           height={WAFFLE_HEIGHT}

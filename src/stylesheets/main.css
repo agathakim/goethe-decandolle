@@ -99,6 +99,11 @@ h1 {
   z-index: 2;
 }
 
+.tooltip .color-block {
+  height: 10px;
+  width: 10px;
+}
+
 .legend {
   align-items: center;
 }
@@ -120,4 +125,13 @@ h1 {
 
 .link-graph.hide {
   opacity: 0;
+}
+
+.displayNode {
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.displayNode.opaqueDisplayNode {
+  opacity: 0.3;
 }
