@@ -8,6 +8,8 @@ export default class ColorLegend extends React.Component {
       validColors,
       toggleColor,
       recalculateGraphs,
+      unselectAll,
+      selectAll,
     } = this.props;
     return (
       <div className="flex-down legend">
@@ -43,8 +45,10 @@ export default class ColorLegend extends React.Component {
             </div>
           );
         })}
-        <button onClick={toggleConnections}> Toggle connections</button>
         <button onClick={recalculateGraphs}> Recalculate Graphs</button>
+        <button onClick={toggleConnections}> Toggle connections</button>
+        <button onClick={selectAll}> Select All</button>
+        <button onClick={unselectAll}> Select None</button>
       </div>
     );
   }

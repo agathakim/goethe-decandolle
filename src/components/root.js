@@ -18,6 +18,13 @@ export default class RootComponent extends React.Component {
 
   render() {
     const {showConnections, validColors, calcIdx} = this.state;
+    const changeAllSelection = setTo => () => {
+      const newColors = Object.keys(validColors).reduce((acc, row) => {
+        acc[row] = setTo;
+        return acc;
+      }, {});
+      this.setState({validColors: newColors});
+    };
     return (
       <div>
         <div className="flex">
@@ -31,7 +38,7 @@ export default class RootComponent extends React.Component {
             <ColorLegend
               validColors={validColors}
               toggleColor={color => {
-                const newColors = {...this.state.validColors};
+                const newColors = {...validColors};
                 newColors[color] = !newColors[color];
                 this.setState({validColors: newColors});
               }}
@@ -41,6 +48,8 @@ export default class RootComponent extends React.Component {
               recalculateGraphs={() => {
                 this.setState({calcIdx: calcIdx + 1});
               }}
+              unselectAll={changeAllSelection(false)}
+              selectAll={changeAllSelection(true)}
             />
           </div>
           {

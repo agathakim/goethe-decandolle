@@ -51,19 +51,24 @@ export function colorSentences(data) {
 }
 
 export function prepBarChart(data, validColors) {
-  const counts = data.reduce((acc, row) => {
-    Object.keys(row).forEach(key => {
-      acc[key] = (acc[key] || 0) + row[key];
+  const counts = data
+    .filter(d => {
+      // i think this should be every, but i think agatha expects some. shruggie.
+      return d.colors.some(color => validColors[color]);
+    })
+    .reduce((acc, row) => {
+      Object.keys(row).forEach(key => {
+        acc[key] = (acc[key] || 0) + row[key];
+      });
+      return acc;
     });
-    return acc;
-  });
   delete counts.index;
+  delete counts.colors;
   return Object.entries(counts).map(([cat, count]) => {
-    const color = COLORS[cat.toLowerCase()];
     return {
       cat,
-      count: validColors[color] ? count : 0,
-      color,
+      count: count || 0,
+      color: COLORS[cat.toLowerCase()],
     };
   });
 }

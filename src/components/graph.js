@@ -123,6 +123,14 @@ export default class Graph extends React.Component {
       .range([0, WAFFLE_WIDTH]);
     return (
       <div style={{position: 'relative'}}>
+        {this.props.nodes.length === 0 && (
+          <div>
+            <h5>
+              There are no sentences tagged with just this combination of nodes,
+              please add more categories
+            </h5>
+          </div>
+        )}
         <svg width={WAFFLE_WIDTH} height={WAFFLE_HEIGHT} className="node-graph">
           <g transform={`translate(${CHART_MARGIN.left}, ${CHART_MARGIN.top})`}>
             {progress < 1 && (

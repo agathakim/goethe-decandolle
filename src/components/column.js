@@ -11,7 +11,8 @@ function generateNodes(waffleBookData, validColors) {
   return waffleBookData
     .reduce((acc, row) => acc.concat(row), [])
     .filter(d => {
-      return d.colors.every(color => validColors[color]);
+      // i think this should be every, but i think agatha expects some. shruggie.
+      return d.colors.some(color => validColors[color]);
     });
 }
 
@@ -85,11 +86,12 @@ export default class Column extends React.Component {
         ({sentenceClassifcations, numberedSents}) => {
           const waffleBookData = prepWaffleData(sentenceClassifcations);
           const graphNodes = generateNodes(waffleBookData, validColors);
+          console.log(graphNodes);
           const data = colorSentences(sentenceClassifcations);
           this.setState({
             data,
             numberedSents,
-            barChartData: prepBarChart(sentenceClassifcations, validColors),
+            barChartData: prepBarChart(data, validColors),
             waffleBookData,
             loading: false,
             graphNodes,
