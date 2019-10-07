@@ -39,48 +39,29 @@ export const files = [
 //   'Writing aim, direction': '#0066FF',
 //   'Writing direction': '#0066FF',
 // };
-
-const PRE_COLORS = {
-  Romantic: '#62ACFF',
-  Classical: '#00B318',
-  Empirical: '#FFFF03',
-  Inductive: '#BA00B4',
-  Deductive: '#80FF00',
-  'Rational/Speculative': '#FFA2E1',
-  'Rational, Speculative': '#FFA2E1',
-  'Rational-Speculative': '#FFA2E1',
-  Analogical: '#FF0011',
-  Methodological: '#A9FFD2',
-  'Historical/Descriptive': '#1100FF',
-  'Historical, Descriptive': '#1100FF',
-  'Historical, descriptive': '#1100FF',
-  Historical: '#1100FF',
-  'Philosophical, epistemological': '#CC99FF',
-  'Philosophical definition': '#CC99FF',
-  Philosophical: '#CC99FF',
-  'Metaphorical/Visual': '#FFAE5C',
-  'metaphorical, visual': '#FFAE5C',
-  Metaphorical: '#FFAE5C',
-  'Metaphorical-Agency to nature': '#9F5103',
-  'Metaphors attributing agency to nature': '#9F5103',
-  'agency to nature': '#9F5103',
-  'Future/Utility': '#FF007F',
-  'Future, Utility': '#FF007F',
-  'Future-Utility': '#FF007F',
-  'Classificatory/definition': '#666600',
-  'Classificatory definition': '#666600',
-  Classificatory: '#666600',
-  Numerical: '#000000',
-  'Writing aim/direction': '#808080',
-  'Writing aim, direction': '#808080',
-  'Writing direction': '#808080',
-  'Blank statement': '#FFFFFF',
-  Blank: '#FFFFFF',
-};
-export const COLORS = Object.entries(PRE_COLORS).reduce((acc, [key, color]) => {
-  acc[key.toLowerCase()] = color;
-  return acc;
-}, {});
+const USE_TABLEAU_COLORS = false;
+const TABLEAU_COLORS = [
+  '#1F77B4',
+  '#AEC7E8',
+  '#FF7F0E',
+  '#FFBB78',
+  '#2CA02C',
+  '#98DF89',
+  '#D62728',
+  '#FF9896',
+  '#9467BD',
+  '#C5B0D5',
+  '#8C564A',
+  '#C49C94',
+  '#E377C2',
+  '#F7B6D2',
+  '#7F7F7F',
+  '#C7C7C7',
+  '#BCBD22',
+  '#DBDB8D',
+  '#17BECF',
+  '#9EDAE5',
+];
 
 export const COLORS_FOR_LEGEND = [
   {
@@ -168,7 +149,67 @@ export const COLORS_FOR_LEGEND = [
     tag: '(Bl)',
     color: '#FFFFFF',
   },
-];
+].map((row, idx) =>
+  USE_TABLEAU_COLORS
+    ? {
+        ...row,
+        oldColor: row.color,
+        color: TABLEAU_COLORS[idx + 1],
+      }
+    : row,
+);
+
+const OLD_COLORS_TO_NEW_COLORS = COLORS_FOR_LEGEND.reduce(
+  (acc, {color, oldColor}) => {
+    acc[oldColor] = color;
+    return acc;
+  },
+  {},
+);
+
+const PRE_COLORS = {
+  Romantic: '#62ACFF',
+  Classical: '#00B318',
+  Empirical: '#FFFF03',
+  Inductive: '#BA00B4',
+  Deductive: '#80FF00',
+  'Rational/Speculative': '#FFA2E1',
+  'Rational, Speculative': '#FFA2E1',
+  'Rational-Speculative': '#FFA2E1',
+  Analogical: '#FF0011',
+  Methodological: '#A9FFD2',
+  'Historical/Descriptive': '#1100FF',
+  'Historical, Descriptive': '#1100FF',
+  'Historical, descriptive': '#1100FF',
+  Historical: '#1100FF',
+  'Philosophical, epistemological': '#CC99FF',
+  'Philosophical definition': '#CC99FF',
+  Philosophical: '#CC99FF',
+  'Metaphorical/Visual': '#FFAE5C',
+  'metaphorical, visual': '#FFAE5C',
+  Metaphorical: '#FFAE5C',
+  'Metaphorical-Agency to nature': '#9F5103',
+  'Metaphors attributing agency to nature': '#9F5103',
+  'agency to nature': '#9F5103',
+  'Future/Utility': '#FF007F',
+  'Future, Utility': '#FF007F',
+  'Future-Utility': '#FF007F',
+  'Classificatory/definition': '#666600',
+  'Classificatory definition': '#666600',
+  Classificatory: '#666600',
+  Numerical: '#000000',
+  'Writing aim/direction': '#808080',
+  'Writing aim, direction': '#808080',
+  'Writing direction': '#808080',
+  'Blank statement': '#FFFFFF',
+  Blank: '#FFFFFF',
+};
+export const COLORS = Object.entries(PRE_COLORS).reduce((acc, [key, color]) => {
+  acc[key.toLowerCase()] = USE_TABLEAU_COLORS
+    ? OLD_COLORS_TO_NEW_COLORS[color]
+    : color;
+  return acc;
+}, {});
 
 export const categoryRelationships = [
   {cat: 'Empirical', superCat: 'Descriptive'},

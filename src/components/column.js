@@ -2,6 +2,7 @@ import React from 'react';
 import BarChart from './barchart';
 import Graph from './graph';
 import Picker from './file-picker';
+import StackedBarChart from './treemap';
 // import RelativeCounts from './relative-counts';
 
 import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
@@ -168,6 +169,7 @@ export default class Column extends React.Component {
           {
             // <RelativeCounts data={data} />
           }
+          <StackedBarChart data={barChartData} />
           <BarChart data={barChartData} />
         </div>
       </div>
