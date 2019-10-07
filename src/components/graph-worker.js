@@ -55,11 +55,19 @@ function prepositionNodesWithTSNE(nodes) {
   });
   const model = new TSNE({
     dim: 2,
-    perplexity: 50.0,
-    earlyExaggeration: 4.0,
-    learningRate: 500.0,
+    perplexity: 10.0,
+    earlyExaggeration: 10.0,
+    learningRate: 100.0,
     nIter: 200,
     metric: 'dice',
+  });
+  model.on('progressIter', ([iter, rror, gradNorm]) => {
+    postMessage({type: 'tick', progress: (iter / 200) * 0.5});
+    // data: [iter, error, gradNorm]
+    // postMessage({
+    //   type: 'PROGRESS_ITER',
+    //   data: iter
+    // });
   });
   model.init({
     data: nodes.map(({featureVector}) => featureVector),
@@ -105,7 +113,7 @@ function executeSimulation(simulation) {
   );
   // const numSteps = 1000;
   for (let i = 0, n = numSteps; i < n; ++i) {
-    postMessage({type: 'tick', progress: i / n});
+    postMessage({type: 'tick', progress: i / n + 0.5});
     simulation.tick();
   }
 }
@@ -115,8 +123,8 @@ addEventListener('message', event => {
     data: {nodes, links},
   } = event;
 
-  applyHueristicPreposition(nodes);
-  // prepositionNodesWithTSNE(nodes);
+  // applyHueristicPreposition(nodes);
+  prepositionNodesWithTSNE(nodes);
 
   const simulation = prepareSimulation(nodes, links);
   executeSimulation(simulation);
