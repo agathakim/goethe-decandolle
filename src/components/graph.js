@@ -113,6 +113,10 @@ export default class Graph extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.graphWorker.terminate();
+  }
+
   render() {
     const {
       progress,

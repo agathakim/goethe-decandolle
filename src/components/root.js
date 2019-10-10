@@ -34,7 +34,7 @@ export default class RootComponent extends React.Component {
       <div className="app-container">
         <div className="flex">
           <ColumnVisualizations
-            defaultSelection={files[3].filePrefix}
+            defaultSelection={files[0].filePrefix}
             {...columnVisProps}
           />
           <div className="flex center full-height">
@@ -53,7 +53,7 @@ export default class RootComponent extends React.Component {
           </div>
           {
             <ColumnVisualizations
-              defaultSelection={files[0].filePrefix}
+              defaultSelection={files[3].filePrefix}
               {...columnVisProps}
             />
           }

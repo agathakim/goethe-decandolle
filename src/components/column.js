@@ -3,7 +3,8 @@ import BarChart from './barchart';
 import Graph from './graph';
 import Picker from './file-picker';
 import StackedBarChart from './treemap';
-// import RelativeCounts from './relative-counts';
+import Matrix from './matrix';
+import WaffleBook from './waffle-book';
 
 import {
   files,
@@ -11,7 +12,13 @@ import {
   WAFFLE_WIDTH,
   COLORS_FOR_LEGEND,
 } from '../constants';
-import {getFile, prepBarChart, prepWaffleData, colorSentences} from '../utils';
+import {
+  getFile,
+  prepBarChart,
+  prepWaffleData,
+  colorSentences,
+  classnames,
+} from '../utils';
 
 function generateNodes(waffleBookData, validColors, useInclusive) {
   return waffleBookData
@@ -58,6 +65,10 @@ function generateGraphLinks(graphNodes) {
   return Object.values(dedupledLinks);
 }
 
+const VIS_MODE_GRAPH = 'graph';
+const VIS_MODE_WAFFLE = 'waffle';
+const VIS_MODE_MATRIX = 'matrix';
+
 export default class Column extends React.Component {
   constructor(props) {
     super();
@@ -71,6 +82,7 @@ export default class Column extends React.Component {
         acc[color] = true;
         return acc;
       }, {}),
+      visMode: VIS_MODE_MATRIX,
     };
     this.setAsyncState = this.setAsyncState.bind(this);
     this.updateData = this.updateData.bind(this);
@@ -134,6 +146,7 @@ export default class Column extends React.Component {
       useInclusive,
     } = this.props;
     const {
+      data,
       barChartData,
       cooccuranceData,
       loading,
@@ -141,6 +154,8 @@ export default class Column extends React.Component {
       graphNodes,
       graphLinks,
       validColors,
+      visMode,
+      waffleBookData,
     } = this.state;
     if (loading) {
       return (
@@ -161,7 +176,6 @@ export default class Column extends React.Component {
       }, {});
       this.setState({validColors: newColors});
     };
-    console.log(selectedFile);
     return (
       <div
         style={{
@@ -193,19 +207,40 @@ export default class Column extends React.Component {
           </p>
         </div>
         <div className="flex-down">
-          <Graph
-            cooccuranceData={cooccuranceData}
-            showConnections={showConnections}
-            nodes={graphNodes}
-            links={graphLinks}
-            prefix={selectedFile}
-            sendOffscreenNotAvailable={sendOffscreenNotAvailable}
-            barChartData={barChartData}
-            getSentence={idx => this.state.numberedSents[idx]}
-          />
-          {
-            // <RelativeCounts data={data} />
-          }
+          <div className="flex">
+            <span>Visualization Mode:</span>
+            {[VIS_MODE_GRAPH, VIS_MODE_WAFFLE, VIS_MODE_MATRIX].map(mode => {
+              return (
+                <div
+                  key={mode}
+                  onClick={() => this.setState({visMode: mode})}
+                  className={classnames({
+                    'selected-vis-mode': mode === visMode,
+                    'vis-mode': true,
+                  })}
+                >
+                  {mode}
+                </div>
+              );
+            })}
+          </div>
+          {visMode === VIS_MODE_GRAPH && (
+            <Graph
+              cooccuranceData={cooccuranceData}
+              showConnections={showConnections}
+              nodes={graphNodes}
+              links={graphLinks}
+              prefix={selectedFile}
+              sendOffscreenNotAvailable={sendOffscreenNotAvailable}
+              barChartData={barChartData}
+              getSentence={idx => this.state.numberedSents[idx]}
+            />
+          )}
+          {visMode === VIS_MODE_WAFFLE && <WaffleBook data={waffleBookData} />}
+
+          {visMode === VIS_MODE_MATRIX && (
+            <Matrix data={graphNodes} selectedFile={selectedFile} />
+          )}
           <BarChart data={barChartData} />
           <StackedBarChart data={barChartData} />
         </div>

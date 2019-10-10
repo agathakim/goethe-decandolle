@@ -55,6 +55,9 @@ h1 {
 .waffle-book .rv-xy-plot__series--polygon {
   cursor: pointer;
 }
+.waffle-book .rv-xy-plot__series--polygon:hover {
+  stroke: black !important;
+}
 .static-waffle {
   position: absolute;
 }
@@ -238,4 +241,14 @@ h1 {
   left: 0;
   width: 300px;
   z-index: 11;
+}
+
+.vis-mode {
+  cursor: pointer;
+  padding: 0 5px;
+  text-transform: uppercase;
+}
+.vis-mode.selected-vis-mode {
+  font-weight: bold;
+  text-decoration: underline;
 }

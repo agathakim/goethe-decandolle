@@ -4,22 +4,15 @@ import {TARGET_WIDTH, WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
 
 class StaticWaffle extends React.Component {
   render() {
-    const {data, setHoveredComment, lockedWaffle, toggleLock} = this.props;
+    const {data, setHoveredComment} = this.props;
     return (
-      <div
-        className="static-waffle"
-        style={{
-          opacity: lockedWaffle ? 0.3 : 1,
-        }}
-      >
+      <div className="static-waffle">
         <XYPlot
           height={WAFFLE_HEIGHT}
           width={WAFFLE_WIDTH}
           margin={0}
           onMouseOut={d => {
-            if (!lockedWaffle) {
-              setHoveredComment(null);
-            }
+            setHoveredComment(null);
           }}
           xDomain={[0, TARGET_WIDTH + 1]}
           yDomain={[data.length, 0]}
@@ -33,11 +26,8 @@ class StaticWaffle extends React.Component {
                 return [...new Array(colors.length)].map((_, idx) => {
                   return (
                     <PolygonSeries
-                      onSeriesClick={toggleLock}
                       onSeriesMouseOver={d => {
-                        if (!lockedWaffle) {
-                          setHoveredComment(idx);
-                        }
+                        setHoveredComment(idx);
                       }}
                       key={`${idx}-${jdx}-background`}
                       color={colors[idx]}
@@ -62,11 +52,8 @@ class StaticWaffle extends React.Component {
                 return (
                   <PolygonSeries
                     onSeriesMouseOver={d => {
-                      if (!lockedWaffle) {
-                        setHoveredComment(sentenceIdx);
-                      }
+                      setHoveredComment(sentenceIdx);
                     }}
-                    onSeriesClick={toggleLock}
                     key={`groups-${idx}-${jdx}`}
                     style={{
                       fill: 'red',
@@ -164,28 +151,24 @@ class DynamicWaffle extends React.Component {
 }
 
 export default class WaffleBook extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      hoveredComment: null,
+    };
+  }
   render() {
-    const {
-      data,
-      lockedWaffle,
-      setHoveredComment,
-      hoveredComment,
-      toggleLock,
-    } = this.props;
+    const {data} = this.props;
+    const {hoveredComment} = this.state;
     return (
       <div className="waffle-book">
         <StaticWaffle
           data={data}
-          toggleLock={toggleLock}
-          lockedWaffle={lockedWaffle}
-          setHoveredComment={setHoveredComment}
+          setHoveredComment={comment =>
+            this.setState({hoveredComment: comment})
+          }
         />
-        <DynamicWaffle
-          toggleLock={toggleLock}
-          data={data}
-          hoveredComment={hoveredComment}
-        />
-        <div> {`click to ${lockedWaffle ? 'un' : ''}lock`}</div>
+        <DynamicWaffle data={data} hoveredComment={hoveredComment} />
       </div>
     );
   }
