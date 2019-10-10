@@ -5,7 +5,12 @@ import Picker from './file-picker';
 import StackedBarChart from './treemap';
 // import RelativeCounts from './relative-counts';
 
-import {files, DESCRIPTIONS, WAFFLE_WIDTH} from '../constants';
+import {
+  files,
+  DESCRIPTIONS,
+  WAFFLE_WIDTH,
+  COLORS_FOR_LEGEND,
+} from '../constants';
 import {getFile, prepBarChart, prepWaffleData, colorSentences} from '../utils';
 
 function generateNodes(waffleBookData, validColors, useInclusive) {
@@ -62,18 +67,24 @@ export default class Column extends React.Component {
       waffleBookData: null,
       loading: true,
       lockedWaffle: false,
+      validColors: COLORS_FOR_LEGEND.reduce((acc, {color}) => {
+        acc[color] = true;
+        return acc;
+      }, {}),
     };
     this.setAsyncState = this.setAsyncState.bind(this);
     this.updateData = this.updateData.bind(this);
   }
   componentDidMount() {
-    const {validColors, useInclusive} = this.props;
+    const {useInclusive} = this.props;
+    const {validColors} = this.state;
     this.updateData(this.state.selectedFile, validColors, useInclusive);
   }
 
   componentDidUpdate(oldProps) {
     if (oldProps.calcIdx !== this.props.calcIdx) {
-      const {validColors, useInclusive} = this.props;
+      const {validColors} = this.state;
+      const {useInclusive} = this.props;
       this.updateData(this.state.selectedFile, validColors, useInclusive);
     }
   }
@@ -117,7 +128,11 @@ export default class Column extends React.Component {
   }
 
   render() {
-    const {showConnections, sendOffscreenNotAvailable} = this.props;
+    const {
+      showConnections,
+      sendOffscreenNotAvailable,
+      useInclusive,
+    } = this.props;
     const {
       barChartData,
       cooccuranceData,
@@ -125,6 +140,7 @@ export default class Column extends React.Component {
       selectedFile,
       graphNodes,
       graphLinks,
+      validColors,
     } = this.state;
     if (loading) {
       return (
@@ -138,7 +154,14 @@ export default class Column extends React.Component {
         </div>
       );
     }
-
+    const changeAllSelection = setTo => () => {
+      const newColors = Object.keys(validColors).reduce((acc, row) => {
+        acc[row] = setTo;
+        return acc;
+      }, {});
+      this.setState({validColors: newColors});
+    };
+    console.log(selectedFile);
     return (
       <div
         style={{
@@ -147,10 +170,21 @@ export default class Column extends React.Component {
         className="flex-down"
       >
         <Picker
+          validColors={validColors}
           onSelect={newPrefix =>
-            this.updateData(newPrefix, this.props.validColors)
+            this.updateData(newPrefix, validColors, useInclusive)
           }
           selectedFile={selectedFile}
+          toggleColor={color => {
+            const newColors = {...validColors};
+            newColors[color] = !newColors[color];
+            this.setState({validColors: newColors});
+          }}
+          unselectAll={changeAllSelection(false)}
+          selectAll={changeAllSelection(true)}
+          updateGraph={() =>
+            this.updateData(selectedFile, validColors, useInclusive)
+          }
         />
         <div className="flex-down descriptions">
           <h3 className="text-title">{DESCRIPTIONS[selectedFile].fullName}</h3>

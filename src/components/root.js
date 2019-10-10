@@ -1,17 +1,13 @@
 import React from 'react';
 import ColumnVisualizations from './column';
 import ColorLegend from './color-legend';
-import {files, COLORS_FOR_LEGEND} from '../constants';
+import {files} from '../constants';
 
 export default class RootComponent extends React.Component {
   constructor(props) {
     super();
     this.state = {
       showConnections: true,
-      validColors: COLORS_FOR_LEGEND.reduce((acc, {color}) => {
-        acc[color] = true;
-        return acc;
-      }, {}),
       calcIdx: 0,
       useInclusive: true,
       offscreenDrawingDisallowed: false,
@@ -21,26 +17,19 @@ export default class RootComponent extends React.Component {
   render() {
     const {
       showConnections,
-      validColors,
       calcIdx,
       useInclusive,
       offscreenDrawingDisallowed,
     } = this.state;
-    const changeAllSelection = setTo => () => {
-      const newColors = Object.keys(validColors).reduce((acc, row) => {
-        acc[row] = setTo;
-        return acc;
-      }, {});
-      this.setState({validColors: newColors});
-    };
+
     const columnVisProps = {
       showConnections,
       calcIdx,
-      validColors,
       useInclusive,
       sendOffscreenNotAvailable: () =>
         this.setState({offscreenDrawingDisallowed: true}),
     };
+
     return (
       <div className="app-container">
         <div className="flex">
@@ -50,26 +39,16 @@ export default class RootComponent extends React.Component {
           />
           <div className="flex center full-height">
             <ColorLegend
+              useInclusive={useInclusive}
+              showConnections={showConnections}
+              offscreenDrawingDisallowed={offscreenDrawingDisallowed}
               toggleInclusiveExclusive={() => {
                 this.setState({useInclusive: !useInclusive});
               }}
-              useInclusive={useInclusive}
-              validColors={validColors}
-              showConnections={showConnections}
-              offscreenDrawingDisallowed={offscreenDrawingDisallowed}
-              toggleColor={color => {
-                const newColors = {...validColors};
-                newColors[color] = !newColors[color];
-                this.setState({validColors: newColors});
-              }}
-              toggleConnections={() => {
-                this.setState({showConnections: !showConnections});
-              }}
-              recalculateGraphs={() => {
-                this.setState({calcIdx: calcIdx + 1});
-              }}
-              unselectAll={changeAllSelection(false)}
-              selectAll={changeAllSelection(true)}
+              toggleConnections={() =>
+                this.setState({showConnections: !showConnections})
+              }
+              recalculateGraphs={() => this.setState({calcIdx: calcIdx + 1})}
             />
           </div>
           {

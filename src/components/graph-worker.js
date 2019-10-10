@@ -124,8 +124,8 @@ addEventListener('message', event => {
     data: {nodes, links, noOffscreen},
   } = event;
 
-  applyHueristicPreposition(nodes);
-  // prepositionNodesWithTSNE(nodes);
+  // applyHueristicPreposition(nodes);
+  prepositionNodesWithTSNE(nodes);
 
   const simulation = prepareSimulation(nodes, links);
   executeSimulation(simulation);

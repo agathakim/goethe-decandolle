@@ -9,18 +9,14 @@ export default class ColorLegend extends React.Component {
     const {
       showConnections,
       toggleConnections,
-      validColors,
-      toggleColor,
       recalculateGraphs,
-      unselectAll,
-      selectAll,
       toggleInclusiveExclusive,
       useInclusive,
       offscreenDrawingDisallowed,
     } = this.props;
     return (
       <div className="flex-down legend">
-        <h3> Legend + Controls</h3>
+        <h3> Legend</h3>
 
         {COLORS_FOR_LEGEND.map(({label, tag, color}) => {
           return (
@@ -35,25 +31,12 @@ export default class ColorLegend extends React.Component {
                 <div>
                   <b>{tag}</b>:<i>{label}</i>
                 </div>
-                <div className="flex">
-                  <label className="container">
-                    <input
-                      onChange={() => toggleColor(color)}
-                      type="checkbox"
-                      checked={validColors[color]}
-                    />
-                    <span className="checkmark">Showing</span>
-                  </label>
-                </div>
               </div>
             </div>
           );
         })}
+        <h3> Controls</h3>
         <button onClick={recalculateGraphs}> Recalculate Graphs</button>
-        <div className="flex">
-          <button onClick={selectAll}> Select All</button>
-          <button onClick={unselectAll}> Unselect All</button>
-        </div>
 
         <label htmlFor="toggle-connections" className="switch-center">
           <span
