@@ -14,6 +14,10 @@ body,
   width: 100%;
 }
 
+.app-container {
+  margin-bottom: 500px;
+}
+
 #goethe-application {
   padding: 10px 90px;
   /* height: calc(100% - 20px);
@@ -40,6 +44,12 @@ h1 {
 .center {
   align-items: center;
   justify-content: center;
+}
+
+
+.bar-chart-x-axis .rv-xy-plot__axis__tick__text {
+  font-size: 9px;
+  transform: rotate(-90deg) translate(-20px, 0);
 }
 
 .waffle-book .rv-xy-plot__series--polygon {
@@ -152,4 +162,41 @@ h1 {
 
 .rv-treemap__leaf {
   border: white;
+}
+
+.legend-color {
+  border-radius: 100%;
+  height: 20px;
+  margin-right: 3px;
+  width: 20px;
+}
+
+.disabled-switch {
+  cursor: not-allowed;
+}
+
+.disable-switch-label {
+  color: red;
+  opacity: 0.7;
+}
+
+.no-offscreen-message {
+  white-space: normal;
+  max-width: 300px;
+}
+
+.control-switch {
+  font-size: 12px;
+}
+
+.text-title {
+  height: 50px;
+  margin: 0;
+  padding: 0;
+}
+
+.text-description {
+  height: 140px;
+  margin: 0;
+  padding: 0;
 }

@@ -14,11 +14,18 @@ export default class RootComponent extends React.Component {
       }, {}),
       calcIdx: 0,
       useInclusive: true,
+      offscreenDrawingDisallowed: false,
     };
   }
 
   render() {
-    const {showConnections, validColors, calcIdx, useInclusive} = this.state;
+    const {
+      showConnections,
+      validColors,
+      calcIdx,
+      useInclusive,
+      offscreenDrawingDisallowed,
+    } = this.state;
     const changeAllSelection = setTo => () => {
       const newColors = Object.keys(validColors).reduce((acc, row) => {
         acc[row] = setTo;
@@ -31,9 +38,11 @@ export default class RootComponent extends React.Component {
       calcIdx,
       validColors,
       useInclusive,
+      sendOffscreenNotAvailable: () =>
+        this.setState({offscreenDrawingDisallowed: true}),
     };
     return (
-      <div>
+      <div className="app-container">
         <div className="flex">
           <ColumnVisualizations
             defaultSelection={files[3].filePrefix}
@@ -47,6 +56,7 @@ export default class RootComponent extends React.Component {
               useInclusive={useInclusive}
               validColors={validColors}
               showConnections={showConnections}
+              offscreenDrawingDisallowed={offscreenDrawingDisallowed}
               toggleColor={color => {
                 const newColors = {...validColors};
                 newColors[color] = !newColors[color];

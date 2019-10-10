@@ -94,6 +94,7 @@ function prepositionNodesWithTSNE(nodes) {
 function prepareSimulation(nodes, links) {
   const linkForce = forceLink()
     .distance(8)
+    // .strength(-)
     .links(links)
     .id(d => d.sentenceIdx);
   const collideForce = forceCollide()
@@ -103,7 +104,7 @@ function prepareSimulation(nodes, links) {
     .force('link', linkForce)
     .force('center', forceCenter(WAFFLE_WIDTH / 2, WAFFLE_HEIGHT / 2))
     .force('collide', collideForce)
-    .force('charge', forceManyBody().strength(-40))
+    .force('charge', forceManyBody().strength(-4000))
     .stop();
 }
 
@@ -120,11 +121,11 @@ function executeSimulation(simulation) {
 
 addEventListener('message', event => {
   const {
-    data: {nodes, links},
+    data: {nodes, links, noOffscreen},
   } = event;
 
-  // applyHueristicPreposition(nodes);
-  prepositionNodesWithTSNE(nodes);
+  applyHueristicPreposition(nodes);
+  // prepositionNodesWithTSNE(nodes);
 
   const simulation = prepareSimulation(nodes, links);
   executeSimulation(simulation);
@@ -140,6 +141,9 @@ addEventListener('message', event => {
   const yScale = scaleLinear()
     .domain([minY, maxY])
     .range([CHART_MARGIN.top, WAFFLE_HEIGHT - CHART_MARGIN.bottom]);
+  if (noOffscreen) {
+    return;
+  }
   const ctx = event.data.canvas.getContext('2d');
   ctx.globalAlpha = 0.3;
 

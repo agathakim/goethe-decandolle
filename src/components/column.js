@@ -117,7 +117,7 @@ export default class Column extends React.Component {
   }
 
   render() {
-    const {showConnections} = this.props;
+    const {showConnections, sendOffscreenNotAvailable} = this.props;
     const {
       barChartData,
       cooccuranceData,
@@ -153,8 +153,10 @@ export default class Column extends React.Component {
           selectedFile={selectedFile}
         />
         <div className="flex-down descriptions">
-          <h3>{DESCRIPTIONS[selectedFile].fullName}</h3>
-          <p>{DESCRIPTIONS[selectedFile].description}</p>
+          <h3 className="text-title">{DESCRIPTIONS[selectedFile].fullName}</h3>
+          <p className="text-description">
+            {DESCRIPTIONS[selectedFile].description}
+          </p>
         </div>
         <div className="flex-down">
           <Graph
@@ -163,14 +165,15 @@ export default class Column extends React.Component {
             nodes={graphNodes}
             links={graphLinks}
             prefix={selectedFile}
+            sendOffscreenNotAvailable={sendOffscreenNotAvailable}
             barChartData={barChartData}
             getSentence={idx => this.state.numberedSents[idx]}
           />
           {
             // <RelativeCounts data={data} />
           }
-          <StackedBarChart data={barChartData} />
           <BarChart data={barChartData} />
+          <StackedBarChart data={barChartData} />
         </div>
       </div>
     );

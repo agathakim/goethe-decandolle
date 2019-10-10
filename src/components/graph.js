@@ -100,18 +100,17 @@ export default class Graph extends React.Component {
           return;
       }
     };
-
+    const {nodes, links, sendOffscreenNotAvailable} = this.props;
     const htmlCanvas = this.refs.canvas;
-    const offscreen = htmlCanvas.transferControlToOffscreen();
+    const offscreenNotAvailable = !htmlCanvas.transferControlToOffscreen;
+    if (offscreenNotAvailable) {
+      sendOffscreenNotAvailable();
+      this.graphWorker.postMessage({nodes, links, noOffscreen: true});
+    } else {
+      const canvas = htmlCanvas.transferControlToOffscreen();
 
-    this.graphWorker.postMessage(
-      {
-        nodes: this.props.nodes,
-        links: this.props.links,
-        canvas: offscreen,
-      },
-      [offscreen],
-    );
+      this.graphWorker.postMessage({nodes, links, canvas}, [canvas]);
+    }
   }
 
   render() {

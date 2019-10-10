@@ -1,6 +1,7 @@
 import React from 'react';
 import Switch from 'react-switch';
-
+import ReactTooltip from 'react-tooltip';
+import {classnames} from '../utils';
 import {COLORS_FOR_LEGEND} from '../constants';
 
 export default class ColorLegend extends React.Component {
@@ -15,6 +16,7 @@ export default class ColorLegend extends React.Component {
       selectAll,
       toggleInclusiveExclusive,
       useInclusive,
+      offscreenDrawingDisallowed,
     } = this.props;
     return (
       <div className="flex-down legend">
@@ -25,13 +27,8 @@ export default class ColorLegend extends React.Component {
             <div className="flex medium-font center" key={tag}>
               <div className="flex">
                 <div
-                  style={{
-                    backgroundColor: color,
-                    height: '20px',
-                    width: '20px',
-                    borderRadius: '100%',
-                    marginRight: '3px',
-                  }}
+                  className="legend-color"
+                  style={{backgroundColor: color}}
                 />
               </div>
               <div className="flex-down">
@@ -59,10 +56,43 @@ export default class ColorLegend extends React.Component {
         </div>
 
         <label htmlFor="toggle-connections" className="switch-center">
-          <span>Toggle connections</span>
+          <span
+            className={classnames({
+              'disabled-switch': offscreenDrawingDisallowed,
+            })}
+          >
+            {!offscreenDrawingDisallowed && (
+              <span className="control-switch"> Toggle connections</span>
+            )}
+            {offscreenDrawingDisallowed && (
+              <span>
+                <span
+                  data-tip
+                  data-for="disableSwitchTooltip"
+                  className="disable-switch-label control-switch"
+                >
+                  {' '}
+                  Showing Connections is Disabled(?){' '}
+                </span>
+                <ReactTooltip
+                  id="disableSwitchTooltip"
+                  type="warning"
+                  effect="solid"
+                >
+                  <span className="no-offscreen-message">
+                    Rendeing the the connections between the nodes is an
+                    expensive computational process, and, unfortunately, is
+                    currently only available on Chrome. For a full experience
+                    please view this page in an up to date copy of Chrome.
+                  </span>
+                </ReactTooltip>
+              </span>
+            )}
+          </span>
           <Switch
-            checked={showConnections}
+            checked={offscreenDrawingDisallowed ? false : showConnections}
             onChange={toggleConnections}
+            disabled={offscreenDrawingDisallowed}
             onColor="#86d3ff"
             onHandleColor="#2693e6"
             handleDiameter={20}
@@ -78,7 +108,7 @@ export default class ColorLegend extends React.Component {
         </label>
 
         <label htmlFor="inclusive-exclusive" className="switch-center">
-          <span>Use inclusive</span>
+          <span className="control-switch">Use inclusive</span>
           <Switch
             checked={useInclusive}
             onChange={toggleInclusiveExclusive}
