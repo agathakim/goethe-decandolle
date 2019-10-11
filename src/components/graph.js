@@ -1,7 +1,7 @@
 import React from 'react';
 import Switch from 'react-switch';
 import ReactTooltip from 'react-tooltip';
-
+import Tooltip from './tooltip';
 import {scaleLinear} from 'd3-scale';
 
 import {
@@ -10,7 +10,7 @@ import {
   CHART_MARGIN,
   COLORS_FOR_LEGEND,
 } from '../constants';
-import {computeDomain, classnames} from '../utils';
+import {computeDomain, classnames, equalColorSets} from '../utils';
 
 function renderInnerCircles(node) {
   /* eslint-disable react/display-name */
@@ -27,50 +27,6 @@ function renderInnerCircles(node) {
       />
     );
   };
-}
-
-function equalColorSets(arrA, arrB) {
-  if (arrA.length !== arrB.length) {
-    return false;
-  }
-  for (let idx = 0; idx < arrA.length; idx++) {
-    if (arrA[idx] !== arrB[idx]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function renderTooltip(hoveredComment, getSentence, cooccuranceData) {
-  const count = cooccuranceData[JSON.stringify(hoveredComment.node.colors)];
-  const similarMessage =
-    count === 1
-      ? '(Unique tag set)'
-      : `(${count} sentencess have this tag set)`;
-  return (
-    <div
-      className="tooltip"
-      style={{
-        top: hoveredComment.offsetY + 50,
-        left: hoveredComment.offsetX + 10,
-        zIndex: 2,
-      }}
-    >
-      <div className="flex">
-        {hoveredComment.node.colors.map(color => {
-          return (
-            <div
-              className="color-block"
-              key={`hover-${color}`}
-              style={{backgroundColor: color}}
-            />
-          );
-        })}
-        <span className="small-font">{similarMessage}</span>
-      </div>
-      {getSentence(hoveredComment.node.sentenceIdx)}
-    </div>
-  );
 }
 
 export default class Graph extends React.Component {
@@ -348,7 +304,7 @@ export default class Graph extends React.Component {
           </g>
         </svg>
         {hoveredComment &&
-          renderTooltip(hoveredComment, getSentence, cooccuranceData)}
+          Tooltip({hoveredComment, getSentence, cooccuranceData})}
         <canvas
           width={WAFFLE_WIDTH}
           height={WAFFLE_HEIGHT}

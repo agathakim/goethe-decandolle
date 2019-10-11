@@ -4,7 +4,7 @@ import Graph from './graph';
 import Picker from './file-picker';
 import StackedBarChart from './treemap';
 import Matrix from './matrix';
-import WaffleBook from './waffle-book';
+import WaffleBook from './waffle';
 
 import {
   files,
@@ -39,7 +39,7 @@ export default class Column extends React.Component {
         acc[color] = true;
         return acc;
       }, {}),
-      visMode: VIS_MODE_MATRIX,
+      visMode: VIS_MODE_WAFFLE,
       useInclusive: true,
     };
     this.setAsyncState = this.setAsyncState.bind(this);
@@ -205,7 +205,14 @@ export default class Column extends React.Component {
               getSentence={idx => this.state.numberedSents[idx]}
             />
           )}
-          {visMode === VIS_MODE_WAFFLE && <WaffleBook data={waffleBookData} />}
+          {visMode === VIS_MODE_WAFFLE && (
+            <WaffleBook
+              data={waffleBookData}
+              cooccuranceData={cooccuranceData}
+              barChartData={barChartData}
+              getSentence={idx => this.state.numberedSents[idx]}
+            />
+          )}
 
           {visMode === VIS_MODE_MATRIX && <Matrix data={graphNodes} />}
         </div>

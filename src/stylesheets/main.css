@@ -60,9 +60,11 @@ h1 {
 .waffle-book .rv-xy-plot__series--polygon {
   cursor: pointer;
 }
-.waffle-book .rv-xy-plot__series--polygon:hover {
-  stroke: black !important;
+.hover-box {
+  pointer-events: none;
 }
+
+
 .static-waffle {
   position: absolute;
 }
