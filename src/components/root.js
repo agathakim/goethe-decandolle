@@ -9,10 +9,10 @@ export default class RootComponent extends React.Component {
       <div className="app-container">
         <div className="flex">
           <ColumnVisualizations defaultSelection={files[0].filePrefix} />
-          <div className="flex center full-height">
+          {<ColumnVisualizations defaultSelection={files[3].filePrefix} />}
+          <div className="flex full-height">
             <ColorLegend />
           </div>
-          {<ColumnVisualizations defaultSelection={files[3].filePrefix} />}
         </div>
       </div>
     );

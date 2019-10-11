@@ -3,6 +3,8 @@ import {scaleLinear} from 'd3-scale';
 import {interpolateViridis} from 'd3-scale-chromatic';
 import Switch from 'react-switch';
 
+import SteppedLegend from './stepped-legend';
+
 import {COLORS_FOR_LEGEND, WAFFLE_WIDTH, WAFFLE_HEIGHT} from '../constants';
 
 const pairToKey = pair => JSON.stringify(pair.sort());
@@ -63,6 +65,25 @@ function prepBoxes(counts, hideEmptyRows) {
   return {allowedColors, reducedColorPairs};
 }
 
+function discretizingLegend(steps, colorMap, width, height, style) {
+  const xScale = scaleLinear()
+    .domain([0, 1])
+    .range([0, width]);
+  return (
+    <svg width={width} height={height}>
+      {[...new Array(steps)].map((_, idx) => (
+        <rect
+          x={xScale(idx / steps)}
+          y="0"
+          width={idx / steps}
+          height={height}
+          {...style}
+        />
+      ))}
+    </svg>
+  );
+}
+
 export default class RelativeCounts extends React.Component {
   constructor() {
     super();
@@ -87,11 +108,12 @@ export default class RelativeCounts extends React.Component {
     const yScale = scaleLinear()
       .domain([0, reducedColorPairs.length])
       .range([0, WAFFLE_HEIGHT - margin.top - margin.bottom]);
+    const maxVal = Object.values(counts).reduce(
+      (acc, v) => Math.max(acc, v),
+      0,
+    );
     const colorMap = scaleLinear()
-      .domain([
-        0,
-        Object.values(counts).reduce((acc, v) => Math.max(acc, v), 0),
-      ])
+      .domain([0, maxVal])
       .range([0, 1]);
     const colorScale = v => interpolateViridis(Math.sqrt(colorMap(v)));
 
@@ -157,7 +179,8 @@ export default class RelativeCounts extends React.Component {
             )}
           </g>
         </svg>
-        <div>
+
+        <div className="flex center">
           <label htmlFor="hide-empty" className="switch-center">
             <span className="control-switch">Hide Empty Rows</span>
             <Switch
@@ -176,6 +199,14 @@ export default class RelativeCounts extends React.Component {
               id="hide-empty"
             />
           </label>
+          <SteppedLegend
+            colorMap={v => interpolateViridis(Math.sqrt(v))}
+            width={200}
+            height={45}
+            steps={10}
+            minVal={0}
+            maxVal={maxVal}
+          />
         </div>
       </div>
     );
