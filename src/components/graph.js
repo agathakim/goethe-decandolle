@@ -135,7 +135,11 @@ export default class Graph extends React.Component {
   }
 
   renderControls() {
-    const {clickedComment, selectedColor} = this.state;
+    const {
+      clickedComment,
+      selectedColor,
+      offscreenDrawingDisallowed,
+    } = this.state;
     const {barChartData} = this.props;
 
     return (
@@ -148,7 +152,19 @@ export default class Graph extends React.Component {
             : 'Click to Highlight a Particular Tag Set'}
         </span>
         <div className="flex">
-          <button onClick={() => {}}> Recalculate Graphs</button>
+          <button
+            onClick={() =>
+              this.graphWorker.postMessage({
+                nodes: this.props.nodes,
+                links: this.props.links,
+                noOffscreen: offscreenDrawingDisallowed,
+                update: true,
+              })
+            }
+          >
+            {' '}
+            Recalculate Graphs
+          </button>
           {this.renderToggle()}
         </div>
         <h5>Select single color classes</h5>

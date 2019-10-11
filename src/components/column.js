@@ -39,7 +39,7 @@ export default class Column extends React.Component {
         acc[color] = true;
         return acc;
       }, {}),
-      visMode: VIS_MODE_WAFFLE,
+      visMode: VIS_MODE_GRAPH,
       useInclusive: true,
     };
     this.setAsyncState = this.setAsyncState.bind(this);
