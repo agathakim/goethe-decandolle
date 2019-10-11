@@ -185,3 +185,47 @@ export function computeDomain(nodes) {
     },
   );
 }
+
+export function generateNodes(waffleBookData, validColors, useInclusive) {
+  return waffleBookData
+    .reduce((acc, row) => acc.concat(row), [])
+    .filter(d => {
+      const predicate = color => validColors[color];
+      return useInclusive
+        ? d.colors.some(predicate)
+        : d.colors.every(predicate);
+    });
+}
+
+export function generateGraphLinks(graphNodes) {
+  const colorGroups = Object.entries(
+    graphNodes.reduce((acc, row) => {
+      row.colors.forEach(color => {
+        acc[color] = (acc[color] || []).concat(row.sentenceIdx);
+      });
+      return acc;
+    }, {}),
+  );
+
+  const dedupledLinks = colorGroups
+    .reduce((acc, [color, colorGroup]) => {
+      for (let i = 0; i < colorGroup.length; i++) {
+        for (let j = i; j < colorGroup.length; j++) {
+          if (i !== j) {
+            acc.push({
+              source: colorGroup[i],
+              target: colorGroup[j],
+              color,
+            });
+          }
+        }
+      }
+      return acc;
+    }, [])
+    .reduce((acc, {source, target, color}) => {
+      acc[`${source}-${target}-${color}`] = {source, target, color};
+      return acc;
+    }, {});
+
+  return Object.values(dedupledLinks);
+}

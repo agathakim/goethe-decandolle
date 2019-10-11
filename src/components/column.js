@@ -18,52 +18,9 @@ import {
   prepWaffleData,
   colorSentences,
   classnames,
+  generateNodes,
+  generateGraphLinks,
 } from '../utils';
-
-function generateNodes(waffleBookData, validColors, useInclusive) {
-  return waffleBookData
-    .reduce((acc, row) => acc.concat(row), [])
-    .filter(d => {
-      // i think this should be every, but i think agatha expects some. shruggie.
-      if (useInclusive) {
-        return d.colors.some(color => validColors[color]);
-      }
-      return d.colors.every(color => validColors[color]);
-    });
-}
-
-function generateGraphLinks(graphNodes) {
-  const colorGroups = Object.entries(
-    graphNodes.reduce((acc, row) => {
-      row.colors.forEach(color => {
-        acc[color] = (acc[color] || []).concat(row.sentenceIdx);
-      });
-      return acc;
-    }, {}),
-  );
-
-  const dedupledLinks = colorGroups
-    .reduce((acc, [color, colorGroup]) => {
-      for (let i = 0; i < colorGroup.length; i++) {
-        for (let j = i; j < colorGroup.length; j++) {
-          if (i !== j) {
-            acc.push({
-              source: colorGroup[i],
-              target: colorGroup[j],
-              color,
-            });
-          }
-        }
-      }
-      return acc;
-    }, [])
-    .reduce((acc, {source, target, color}) => {
-      acc[`${source}-${target}-${color}`] = {source, target, color};
-      return acc;
-    }, {});
-
-  return Object.values(dedupledLinks);
-}
 
 const VIS_MODE_GRAPH = 'graph';
 const VIS_MODE_WAFFLE = 'waffle';
@@ -83,6 +40,7 @@ export default class Column extends React.Component {
         return acc;
       }, {}),
       visMode: VIS_MODE_MATRIX,
+      useInclusive: true,
     };
     this.setAsyncState = this.setAsyncState.bind(this);
     this.updateData = this.updateData.bind(this);
@@ -139,14 +97,32 @@ export default class Column extends React.Component {
     });
   }
 
+  renderModePicker() {
+    const {visMode} = this.state;
+    return (
+      <div className="flex">
+        <span>Visualization Mode:</span>
+        {[VIS_MODE_GRAPH, VIS_MODE_WAFFLE, VIS_MODE_MATRIX].map(mode => {
+          return (
+            <div
+              key={mode}
+              onClick={() => this.setState({visMode: mode})}
+              className={classnames({
+                'selected-vis-mode': mode === visMode,
+                'vis-mode': true,
+              })}
+            >
+              {mode}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   render() {
+    const {showConnections, sendOffscreenNotAvailable} = this.props;
     const {
-      showConnections,
-      sendOffscreenNotAvailable,
-      useInclusive,
-    } = this.props;
-    const {
-      data,
       barChartData,
       cooccuranceData,
       loading,
@@ -156,6 +132,7 @@ export default class Column extends React.Component {
       validColors,
       visMode,
       waffleBookData,
+      useInclusive,
     } = this.state;
     if (loading) {
       return (
@@ -185,20 +162,24 @@ export default class Column extends React.Component {
       >
         <Picker
           validColors={validColors}
+          selectedFile={selectedFile}
+          useInclusive={useInclusive}
           onSelect={newPrefix =>
             this.updateData(newPrefix, validColors, useInclusive)
           }
-          selectedFile={selectedFile}
           toggleColor={color => {
             const newColors = {...validColors};
             newColors[color] = !newColors[color];
             this.setState({validColors: newColors});
           }}
-          unselectAll={changeAllSelection(false)}
-          selectAll={changeAllSelection(true)}
           updateGraph={() =>
             this.updateData(selectedFile, validColors, useInclusive)
           }
+          toggleInclusiveExclusive={() => {
+            this.setState({useInclusive: !useInclusive});
+          }}
+          unselectAll={changeAllSelection(false)}
+          selectAll={changeAllSelection(true)}
         />
         <div className="flex-down descriptions">
           <h3 className="text-title">{DESCRIPTIONS[selectedFile].fullName}</h3>
@@ -207,23 +188,11 @@ export default class Column extends React.Component {
           </p>
         </div>
         <div className="flex-down">
-          <div className="flex">
-            <span>Visualization Mode:</span>
-            {[VIS_MODE_GRAPH, VIS_MODE_WAFFLE, VIS_MODE_MATRIX].map(mode => {
-              return (
-                <div
-                  key={mode}
-                  onClick={() => this.setState({visMode: mode})}
-                  className={classnames({
-                    'selected-vis-mode': mode === visMode,
-                    'vis-mode': true,
-                  })}
-                >
-                  {mode}
-                </div>
-              );
-            })}
-          </div>
+          <BarChart data={barChartData} />
+          <StackedBarChart data={barChartData} />
+        </div>
+        <div className="flex-down margin-top">
+          {this.renderModePicker()}
           {visMode === VIS_MODE_GRAPH && (
             <Graph
               cooccuranceData={cooccuranceData}
@@ -238,11 +207,7 @@ export default class Column extends React.Component {
           )}
           {visMode === VIS_MODE_WAFFLE && <WaffleBook data={waffleBookData} />}
 
-          {visMode === VIS_MODE_MATRIX && (
-            <Matrix data={graphNodes} selectedFile={selectedFile} />
-          )}
-          <BarChart data={barChartData} />
-          <StackedBarChart data={barChartData} />
+          {visMode === VIS_MODE_MATRIX && <Matrix data={graphNodes} />}
         </div>
       </div>
     );

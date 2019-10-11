@@ -2,12 +2,9 @@ import React from 'react';
 import {XYPlot, XAxis, VerticalBarSeries, YAxis} from 'react-vis';
 import {WAFFLE_WIDTH} from '../constants';
 
-export default class Radial extends React.Component {
+export default class BarChart extends React.Component {
   render() {
-    const {data} = this.props;
-    const barData = data.map(({tag, count, color}) => ({
-      // y: cat,
-      // x: count,
+    const barData = this.props.data.map(({tag, count, color}) => ({
       y: count,
       x: tag,
       color,
