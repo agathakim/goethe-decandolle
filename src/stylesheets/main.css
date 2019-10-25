@@ -124,6 +124,12 @@ h1 {
   width: 10px;
 }
 
+.legend {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 200px;
+}
+
 .legend h3 {
   font-size: 18px;
 }
