@@ -109,17 +109,9 @@ function Home() {
         src="assets/goetheDecandolle-txt.jpg"
         alt="Goethe and De Candolle in front of a wall of text"
       />
-      <h1>Textual Analysis and Comparison</h1>
-      <h2>“Goethe & De Candolle” - Agatha Kim</h2>
-      <div className="root-links">
-        {Object.keys(localRouter).map(x => (
-          <div key={x} onClick={() => setSection(x)}>
-            {x}
-          </div>
-        ))}
-      </div>
-      <div className="divider"></div>
-      <div className="root-content-container flex-down center">
+      <div>
+        <h1>Textual Analysis and Comparison</h1>
+        <h2>“Goethe & De Candolle” - Agatha Kim</h2>
         <img
           src="assets/flower01_web.png"
           alt="an artistic rendering of a flower"
@@ -130,6 +122,16 @@ function Home() {
           alt="an picture of a palm leaf"
           className="right-flower"
         />
+      </div>
+      <div className="root-links">
+        {Object.keys(localRouter).map(x => (
+          <div key={x} onClick={() => setSection(x)}>
+            {x}
+          </div>
+        ))}
+      </div>
+      <div className="divider"></div>
+      <div className="root-content-container flex-down center">
         <div>
           <Content />
         </div>
