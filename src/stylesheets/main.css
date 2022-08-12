@@ -1,25 +1,136 @@
-
-a {
-  cursor: pointer;
-}
-
 html,
-body,
-#goethe-application {
+body {
   background: #D6D6CE;
-  font-family: Verdana, Geneva, sans-serif;
+  /* font-family: Verdana, Geneva, sans-serif; */
+  font-family: Georgia, Georgia, "Times New Roman", serif;
   height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
 }
 
-.app-container {
-  margin-bottom: 500px;
+
+a {
+  cursor: pointer;
+  color: #2ea3f2;
 }
 
-#goethe-application {
+
+/* THE HOME PAGE */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-page h1 {
+  margin-bottom: 0;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.home-page h2 {
+  margin-bottom: 20px;
+  margin-top: 0;
+  text-align: center;
+}
+
+.top-menu {
+  background: #800000;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  padding: 20px;
+}
+
+.link-container {
+  align-items: flex-end;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-right: 40px;
+  text-align: right;
+}
+
+
+.top-menu a, .top-menu a:visited, .top-menu {
+  color: white;
+}
+
+.top-menu a {
+  margin-bottom: 5px;
+}
+
+.root-links {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  margin-bottom: 50px;
+}
+
+.root-links div {
+  margin-right: 10px;
+}
+
+.root-content-container {
+  font-family: Georgia, Georgia, "Times New Roman", serif;
+  padding: 0px 30px;
+  width: 100%;
+}
+
+.root-content-container>div {
+  max-width: 800px;
+
+}
+
+.text {
+  margin-bottom: 10px;
+}
+
+.text-row a {
+  margin-right: 10px;
+}
+
+.text-row img {
+  max-width: 100px;
+}
+
+
+table, th, td {
+  border: 1px solid;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.left-flower {
+
+  left: 10px;
+}
+
+.right-flower {
+  right: 10px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.left-flower, .right-flower {
+  position: absolute;
+  /* height: 100%; */
+}
+
+/* THE VISUALIZATIONS */
+
+.vis-container {
+  margin-bottom: 500px;
   padding: 10px 90px;
+}
+
+.app-container {
   /* height: calc(100% - 20px);
   width: calc(100% - 180px); */
 }
@@ -28,25 +139,31 @@ h1 {
   text-transform: uppercase;
   text-align: center;
   padding: 0;
-  margin:0;
+  margin: 0;
 }
+
 .grid {
   display: grid;
 }
+
 .flex {
   display: flex;
 }
+
 .flex-down {
   display: flex;
   flex-direction: column;
 }
+
 .full-height {
   height: auto;
 }
+
 .center {
   align-items: center;
   justify-content: center;
 }
+
 .margin-top {
   margin-top: 30px;
 }
@@ -60,6 +177,7 @@ h1 {
 .waffle-book .rv-xy-plot__series--polygon {
   cursor: pointer;
 }
+
 .hover-box {
   pointer-events: none;
 }
@@ -68,6 +186,7 @@ h1 {
 .static-waffle {
   position: absolute;
 }
+
 .dynamic-waffle {
   pointer-events: none;
 }
@@ -257,7 +376,28 @@ h1 {
   padding: 0 5px;
   text-transform: uppercase;
 }
+
 .vis-mode.selected-vis-mode {
   font-weight: bold;
   text-decoration: underline;
+}
+
+/* MOBILE ADJUSTMENTS */
+
+
+@media only screen and (max-width: 600px) {
+  .root-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .text-row {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+  }
+
+  .root-content-container>div, .root-content-container {
+    max-width: calc(100% - 40px)
+  }
 }
