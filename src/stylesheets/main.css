@@ -400,4 +400,8 @@ h1 {
   .root-content-container>div, .root-content-container {
     max-width: calc(100% - 40px)
   }
+
+  .left-flower, .right-flower, #goethe-application>div>div.home-page>div.root-content-container.flex-down.center>div>p:nth-child(4)>img {
+    display: none;
+  }
 }

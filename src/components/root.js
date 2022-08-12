@@ -32,7 +32,7 @@ function TextsPage() {
           <div key={idx} className="flex text-row center">
             <a href={text.link}>
               <img
-                src={`/assets/${text.image}`}
+                src={`assets/${text.image}`}
                 alt="front cover of the text described here"
               />
             </a>
@@ -119,12 +119,12 @@ function Home() {
       </div>
       <div className="root-content-container flex-down center">
         <img
-          src="/assets/flower01_web.png"
+          src="assets/flower01_web.png"
           alt="an artistic rendering of a flower"
           className="left-flower"
         />
         <img
-          src="/assets/flower01_web.png"
+          src="assets/flower01_web.png"
           alt="an picture of a palm leaf"
           className="right-flower"
         />
