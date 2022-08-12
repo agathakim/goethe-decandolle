@@ -97,6 +97,7 @@ const localRouter = {
   Methodology: simpleSection(Texts.methodology),
   'Categories Key & Example Sentences': keySentences,
   'Thanks To': simpleSection(Texts.thanks),
+  Contact: simpleSection(Texts.contact),
 };
 
 function Home() {
@@ -117,6 +118,7 @@ function Home() {
           </div>
         ))}
       </div>
+      <div className="divider"></div>
       <div className="root-content-container flex-down center">
         <img
           src="assets/flower01_web.png"
