@@ -1,7 +1,0 @@
-This project provides the visual complements to my dissertation chapter on the comparison of the ideas and receptions between Johann Wolfgang von Goethe (1749-1832) and Augustin Pyramus de Candolle (1778-1841). Goethe and De Candolle were botanists from Germany and Geneva, respectively, who participated in the French scientific community.
-
-The dissertation looks at the impact of the concept of nation on the reception of different types of scientific knowledge in the first half of the nineteenth century, with a focus on the widespread images of the “French science” and “German science” at that time. The political revolutions and wars across Europe at the beginning of the century changed not only individual nations, but also the dynamics among them. I argue that the growing tension, jealousy, and admiration between nations had a visible impact on the seemingly universal scientific community: these factors encouraged the scholars of each nation to embrace particular types of scientific method and presentation, and thus, further guided the manners in which each nation reacted to foreign scientific knowledges. 
-
-As one of case studies, this chapter looks at the discrepancy between, on the one hand, what the French audience assumed Goethe’s and De Candolle’s morphologies to be, and on the other hand, what the actual scientific texts revealed about themselves in terms of their components and structures.
-
-As stated above, the contents on this page are visual complements to the chapter.

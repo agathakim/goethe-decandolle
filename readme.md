@@ -1,4 +1,4 @@
-# Textual Analysis and Comparison “Goethe & De Candolle“
+# Textual Analysis and Comparison “Goethe & Candolle“
 
 This repo contains materials documenting and describing the work found in our paper [Goethe and Candolle: National forms of scientific writing?](https://link.springer.com/article/10.1007/s12064-022-00376-8).
 

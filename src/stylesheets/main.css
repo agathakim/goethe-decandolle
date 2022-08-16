@@ -70,15 +70,22 @@ a {
   margin-bottom: 5px;
 }
 
+.root-links-container {
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+}
+
 .root-links {
-  cursor: pointer;
   display: flex;
   justify-content: center;
   text-decoration: underline;
   margin-bottom: 50px;
+  max-width: 600px;
+  flex-wrap: wrap;
 }
 
-.root-links div {
+.root-links a {
   margin-right: 10px;
 }
 
@@ -133,13 +140,27 @@ table {
 /* THE VISUALIZATIONS */
 
 .vis-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
   margin-bottom: 500px;
   padding: 10px 90px;
+  width: calc(100% - 80px);
+  overflow: scroll;
 }
 
-.app-container {
-  /* height: calc(100% - 20px);
-  width: calc(100% - 180px); */
+.app-container.vis-page .title-container img {
+  display: none;
+}
+
+.app-container.vis-page .root-content-container {
+  /* align-items: unset; */
+  /* justify-content: unsafe; */
+  padding: 0;
+}
+
+.vis-page .root-content-container>div {
+  max-width: unset;
 }
 
 h1 {

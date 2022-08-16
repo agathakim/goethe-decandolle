@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ColumnVisualizations from './column';
 import ColorLegend from './color-legend';
 import {files} from '../constants';
@@ -7,7 +7,14 @@ import Rows from '../texts/rows.json';
 
 import ReactMarkdown from 'react-markdown';
 
-import {Routes, Route, Link, HashRouter, Outlet} from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Link,
+  HashRouter,
+  Outlet,
+  useLocation,
+} from 'react-router-dom';
 
 function VisContainer() {
   return (
@@ -49,7 +56,7 @@ function TextsPage() {
   );
 }
 
-function keySentences() {
+function KeySentences() {
   return (
     <div>
       <div className="flex-down" style={{marginBottom: '10px'}}>
@@ -89,80 +96,98 @@ function keySentences() {
   );
 }
 
-const simpleSection = text => () => <ReactMarkdown>{text}</ReactMarkdown>;
+const classnames = names =>
+  Object.entries(names)
+    .filter(([_, x]) => x)
+    .map(([x]) => x)
+    .join(' ');
 
-const localRouter = {
-  Description: simpleSection(Texts.intro),
-  Texts: TextsPage,
-  Methodology: simpleSection(Texts.methodology),
-  'Categories Key & Example Sentences': keySentences,
-  'Thanks To': simpleSection(Texts.thanks),
-  Contact: simpleSection(Texts.contact),
+const dir = {
+  'Project Description': '/',
+  Texts: '/texts',
+  Methodology: '/methodology',
+  'Categories key & Example sentences': '/examples',
+  'Tools for Texts Visualization and Comparison': '/vis',
+  'Thanks to': '/thanks',
+  Contact: '/contact',
 };
 
-function Home() {
-  const [section, setSection] = useState('Description');
-  const Content = localRouter[section];
-  return (
-    <div className="home-page">
-      <img
-        src="assets/goetheDecandolle-txt.jpg"
-        alt="Goethe and De Candolle in front of a wall of text"
-      />
-      <div>
-        <h1>Textual Analysis and Comparison</h1>
-        <h2>“Goethe & De Candolle” - Agatha Kim</h2>
-        <img
-          src="assets/flower01_web.png"
-          alt="an artistic rendering of a flower"
-          className="left-flower"
-        />
-        <img
-          src="assets/flower01_web.png"
-          alt="an picture of a palm leaf"
-          className="right-flower"
-        />
-      </div>
-      <div className="root-links">
-        {Object.keys(localRouter).map(x => (
-          <div key={x} onClick={() => setSection(x)}>
-            {x}
-          </div>
-        ))}
-      </div>
-      <div className="divider"></div>
-      <div className="root-content-container flex-down center">
-        <div>
-          <Content />
-        </div>
-      </div>
-    </div>
-  );
-}
 function App() {
+  const location = useLocation();
+  const onVisPage = location.pathname.includes('vis');
+
   return (
-    <div className="app-container">
+    <div className={classnames({'app-container': true, 'vis-page': onVisPage})}>
       <div className="top-menu">
         <div>Textual Analysis and Comparison</div>
-        <div className="link-container">
+        {/* <div className="link-container">
           <Link to={'/'}>Project Description</Link>
           <Link to={'/vis'}>
             Visuals for Goethe-DeCandolle Text Comparisons
           </Link>
+        </div> */}
+      </div>
+      <div className="home-page">
+        <img
+          src="assets/goetheDecandolle-txt.jpg"
+          alt="Goethe and Candolle in front of a wall of text"
+        />
+        <div class="title-container">
+          <h1>Textual Analysis and Comparison</h1>
+          <h2>“Goethe & Candolle” - Agatha Kim and Andrew McNutt</h2>
+          <img
+            src="assets/flower01_web.png"
+            alt="an artistic rendering of a flower"
+            className="left-flower"
+          />
+          <img
+            src="assets/flower01_web.png"
+            alt="an picture of a palm leaf"
+            className="right-flower"
+          />
+        </div>
+        <div className="root-links-container">
+          <div className="root-links">
+            {Object.entries(dir).map(([key, val]) => (
+              <Link key={val} to={val}>
+                {key}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="divider"></div>
+        <div className="root-content-container flex-down center">
+          {onVisPage && <Outlet />}
+          {!onVisPage && (
+            <div>
+              <Outlet />
+            </div>
+          )}
         </div>
       </div>
-      <Outlet />
     </div>
   );
 }
+
+const simpleSection = text => () => <ReactMarkdown>{text}</ReactMarkdown>;
+const Home = simpleSection(Texts.intro);
+const Methodology = simpleSection(Texts.methodology);
+const Thanks = simpleSection(Texts.thanks);
+const Contact = simpleSection(Texts.contact);
 
 export default function Root() {
   return (
     <HashRouter>
       <Routes>
         <Route path="/" element={<App />}>
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/" element={<Home />} />
           <Route path="vis" element={<VisContainer />} />
+          <Route path="methodology" element={<Methodology />} />
+          <Route path="thanks" element={<Thanks />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="texts" element={<TextsPage />} />
+          <Route path="examples" element={<KeySentences />} />
         </Route>
       </Routes>
     </HashRouter>
